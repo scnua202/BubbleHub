@@ -19,3 +19,6 @@ Methods：
 properties:
 	isDestoryAble
 }
+
+测试冲突
+萨维万佛i俄方那我i恩富
