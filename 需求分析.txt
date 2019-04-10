@@ -1,21 +1,45 @@
 VO
-玩家类{
+SuperElement{
+properties:
+	位置
+	宽高
+	能否被穿过 boolean
+	能否被摧毁（能否被炸）
+
+}
+
+玩家类 Player{
 properties:
 	hp
-	扔炸弹的数量
+	可以扔炸弹的数量
 	该人物扔的炸弹的攻击力范围
 	playType （1：wasd控制移动 2：↑↓←→）
-
 Methods：
 	移动 上下左右 move
 	扔炸弹
 }
 
-炸弹类{
+
+炸弹类 Bomb{
+properties:
+	时间
+	攻击力范围，是人物的攻击力传进来
+Methods:
+	引爆
+	定时爆炸
+}
+炸弹爆炸轨迹类 BombTrack{
 	
 }
 
-墙体{
+墙体 wall{
 properties:
-	isDestoryAble
+	
+}
+
+道具类 tool{
+properties:
+
+Method：
+	被捡取道具 abstract
 }
