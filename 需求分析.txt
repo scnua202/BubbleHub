@@ -1,0 +1,21 @@
+VO
+玩家类{
+properties:
+	hp
+	扔炸弹的数量
+	该人物扔的炸弹的攻击力范围
+	playType （1：wasd控制移动 2：↑↓←→）
+
+Methods：
+	移动 上下左右 move
+	扔炸弹
+}
+
+炸弹类{
+	
+}
+
+墙体{
+properties:
+	isDestoryAble
+}
