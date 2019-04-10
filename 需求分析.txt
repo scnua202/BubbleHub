@@ -39,7 +39,15 @@ properties:
 
 道具类 tool{
 properties:
+<<<<<<< HEAD
 
 Method：
 	被捡取道具 abstract
 }
+=======
+	isDestoryAble
+}
+
+测试冲突
+萨维万佛i俄方那我i恩富
+>>>>>>> 10c05cbf848e7a48dda7753a1b8b68876ba80139
