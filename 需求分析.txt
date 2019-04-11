@@ -19,7 +19,6 @@ Methods：
 	扔炸弹
 }
 
-
 炸弹类 Bomb{
 properties:
 	时间
@@ -28,8 +27,10 @@ Methods:
 	引爆
 	定时爆炸
 }
+
 炸弹爆炸轨迹类 BombTrack{
-	
+properties:
+    时间
 }
 
 墙体 wall{
@@ -39,15 +40,8 @@ properties:
 
 道具类 tool{
 properties:
-<<<<<<< HEAD
 
 Method：
 	被捡取道具 abstract
-}
-=======
 	isDestoryAble
 }
-
-测试冲突
-萨维万佛i俄方那我i恩富
->>>>>>> 10c05cbf848e7a48dda7753a1b8b68876ba80139
