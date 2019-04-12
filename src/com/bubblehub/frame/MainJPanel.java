@@ -57,6 +57,7 @@ public class MainJPanel extends JPanel implements Runnable{
 
         // 设置画板背景颜色
         this.setBackground(Color.GRAY);
+        this.paintComponent(g);
         // 计算FPS
         cfpsMaker.makeFPS();
         // 给一个判定值，可以使用枚举
@@ -89,4 +90,5 @@ public class MainJPanel extends JPanel implements Runnable{
         g.drawString("FPS: " + cfpsMaker.getFPS(), 5, 15);
 
     }
+
 }

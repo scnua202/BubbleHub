@@ -2,6 +2,7 @@ package com.bubblehub.main;
 
 import com.bubblehub.frame.MainFrame;
 import com.bubblehub.frame.MainJPanel;
+import com.bubblehub.frame.WelcomePanel;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.thread.GameListener;
 
@@ -24,6 +25,8 @@ public class GameStart {
             MainFrame mainFrame = new MainFrame();
 
             // 画板加载
+//            WelcomePanel welcomePanel = new WelcomePanel(mainFrame);
+//            mainFrame.setjPanel(welcomePanel);
             MainJPanel mainJPanel = new MainJPanel();
             mainFrame.setjPanel(mainJPanel);
             mainFrame.addJPanel();
