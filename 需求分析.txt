@@ -19,7 +19,6 @@ Methods：
 	扔炸弹
 }
 
-
 炸弹类 Bomb{
 properties:
 	时间
@@ -28,8 +27,10 @@ Methods:
 	引爆
 	定时爆炸
 }
+
 炸弹爆炸轨迹类 BombTrack{
-	
+properties:
+    时间
 }
 
 墙体 wall{

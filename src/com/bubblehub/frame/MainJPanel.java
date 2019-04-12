@@ -23,10 +23,10 @@ public class MainJPanel extends JPanel implements Runnable{
     private CFPSMaker cfpsMaker = new CFPSMaker();
 
     // 画板刷新时间间隔，单位为ms
-    public int REFRESHRATE = Integer.parseInt(ElementLoader.getElementLoader().getConfig("SleepTime"));
+    public int REFRESHRATE = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("SleepTime"));
 
     // 理论最大fps
-    public int FPS = Integer.parseInt(ElementLoader.getElementLoader().getConfig("FPS"));
+    public int FPS = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("FPS"));
 
     /**
      * 什么是重写：

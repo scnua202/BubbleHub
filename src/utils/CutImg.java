@@ -1,9 +1,11 @@
-package com.bubblehub;
+package utils;
 
 /**
  * @Author Fisher
  * @Date 2019/4/10 14:58
  **/
+
+import javax.swing.*;
 
 /**
  * 图片切割类
@@ -22,12 +24,12 @@ public class CutImg {
     private int ImgTopY=0;
 
     /**
-     * 每一张小图片的宽度
+     * 图片的宽度
      */
     private int ImgWidth;
 
     /**
-     * 每一张小图片的高度
+     * 图片的高度
      */
     private int ImgHeight;
 
@@ -54,9 +56,9 @@ public class CutImg {
     public CutImg() {
     }
 
-    public CutImg(int imgWidth, int imgHeight, int maxX, int maxY) {
-        ImgWidth = imgWidth;
-        ImgHeight = imgHeight;
+    public CutImg(ImageIcon imageIcon, int maxX, int maxY) {
+        ImgWidth = imageIcon.getIconWidth();
+        ImgHeight = imageIcon.getIconHeight();
         MaxX = maxX;
         MaxY = maxY;
     }
@@ -76,7 +78,7 @@ public class CutImg {
      * @return int
      */
     public int getTopX() {
-        return getImgTopX()+(getImgWidth()*getNoY());
+        return getImgTopX()+(getImgWidth()/getMaxY()*getNoY());
     }
 
     /**
@@ -84,7 +86,7 @@ public class CutImg {
      * @return int
      */
     public int getTopY() {
-        return getImgTopY()+(getImgHeight()*getNoX());
+        return getImgTopY()+(getImgHeight()/getMaxX()*getNoX());
     }
 
     /**
@@ -92,7 +94,7 @@ public class CutImg {
      * @return int
      */
     public int getBottomX() {
-        return getImgTopX()+(getImgWidth()*(getNoY()+1));
+        return getImgTopX()+(getImgWidth()/getMaxY()*(getNoY()+1));
     }
 
     /**
@@ -100,7 +102,7 @@ public class CutImg {
      * @return
      */
     public int getBottomY() {
-        return getImgTopY()+(getImgHeight()*(getNoX()+1));
+        return getImgTopY()+(getImgHeight()/getMaxX()*(getNoX()+1));
     }
 
     public int getImgTopX() {

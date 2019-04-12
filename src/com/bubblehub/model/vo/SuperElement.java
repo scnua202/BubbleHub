@@ -17,19 +17,34 @@ import java.awt.*;
 
 public abstract class SuperElement {
 
+    // 游戏屏幕分辨率
     public int WIDTH;
     public int HEIGHT;
 
+    // 位置，宽高
     private int x;
     private int y;
     private int w;
     private int h;
 
+    // 地图格子坐标
+    private int mapX;
+    private int mapY;
+
     // 默认为true，代表生命周期
     private boolean visible;
 
+    // 贴图
     private ImageIcon img;
+
+    // 能否穿过
     private boolean ThroughAble;
+
+    // 能否被摧毁
+    private boolean DestroyAble;
+
+    // 能否移动
+    private boolean MoveAble;
 
     /*
      * jvm给每个类都会默认添加一个无参构造方法
@@ -38,16 +53,20 @@ public abstract class SuperElement {
      */
     public SuperElement() { }
 
-    public SuperElement(int x, int y, int w, int h) {
+    public SuperElement(int x, int y, int mapX, int mapY, String name, String url) {
         this.x = x;
         this.y = y;
-        this.w = w;
-        this.h = h;
-        this.WIDTH = Integer.parseInt(ElementLoader.getElementLoader().getConfig("Width"));
-        this.HEIGHT = Integer.parseInt(ElementLoader.getElementLoader().getConfig("Height"));
+        this.mapX = mapX;
+        this.mapY = mapY;
+        this.w = Integer.parseInt(ElementLoader.getElementLoader().getElementConfig(name+"Height"));
+        this.h = Integer.parseInt(ElementLoader.getElementLoader().getElementConfig(name+"Width"));
+        this.WIDTH = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Width"));
+        this.HEIGHT = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Height"));
+        this.MoveAble = Boolean.parseBoolean(ElementLoader.getElementLoader().getElementConfig(name+"MoveAble"));
+        this.img = new ImageIcon(url);
+        this.ThroughAble = Boolean.parseBoolean(ElementLoader.getElementLoader().getElementConfig(name+"ThroughAble"));
+        this.DestroyAble = Boolean.parseBoolean(ElementLoader.getElementLoader().getElementConfig(name+"DestroyAble"));
         setVisible(true);
-        setImg(null);
-        setThroughAble(false);
     }
 
     public abstract void showElement(Graphics g);
@@ -130,5 +149,37 @@ public abstract class SuperElement {
 
     public void setHEIGHT(int HEIGHT) {
         this.HEIGHT = HEIGHT;
+    }
+
+    public boolean isDestroyAble() {
+        return DestroyAble;
+    }
+
+    public void setDestroyAble(boolean destroyAble) {
+        DestroyAble = destroyAble;
+    }
+
+    public boolean isMoveAble() {
+        return MoveAble;
+    }
+
+    public void setMoveAble(boolean moveAble) {
+        MoveAble = moveAble;
+    }
+
+    public int getMapX() {
+        return mapX;
+    }
+
+    public void setMapX(int mapX) {
+        this.mapX = mapX;
+    }
+
+    public int getMapY() {
+        return mapY;
+    }
+
+    public void setMapY(int mapY) {
+        this.mapY = mapY;
     }
 }

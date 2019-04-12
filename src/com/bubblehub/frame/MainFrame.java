@@ -45,8 +45,8 @@ public class MainFrame extends JFrame {
     // 初始化方法，在构造函数中进行调用
     // 使用原因：构造方法不能被override，而init函数可以
     public void init() {
-        this.WIDTH = Integer.parseInt(ElementLoader.getElementLoader().getConfig("Width"));
-        this.HEIGHT = Integer.parseInt(ElementLoader.getElementLoader().getConfig("Height"));
+        this.WIDTH = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Width"));
+        this.HEIGHT = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Height"));
         this.setTitle("BubbleHub");
         this.setSize(WIDTH, HEIGHT);
         this.setResizable(false);

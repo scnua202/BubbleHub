@@ -28,9 +28,9 @@ public class GameThread extends Thread {
     // 定时器
     private int time;
 
-    private int REFRESHRATE = Integer.parseInt(ElementLoader.getElementLoader().getConfig("SleepTime"));
+    private int REFRESHRATE = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("SleepTime"));
 
-    public int FPS = Integer.parseInt(ElementLoader.getElementLoader().getConfig("FPS"));
+    public int FPS = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("FPS"));
 
     @Override
     public void run() {
