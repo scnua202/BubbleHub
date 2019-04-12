@@ -26,6 +26,8 @@ public class Player extends SuperElement{
     private int playType;
     // 能扔炸弹数量
     private int bombNum;
+    // 已经扔出的炸弹数量
+    private List bombPlanted = new ArrayList();
     // 攻击力
     private int power;
     // 分数
@@ -34,14 +36,17 @@ public class Player extends SuperElement{
     private boolean pk;
 
     // 移动方向，分为上下、左右两组
-    private MoveEnum UDMove;
-    private MoveEnum LRMove;
+    private MoveEnum Move;
 
     // 记录图片左上角像素坐标
     private CutImg cutImg;
+    // 切换图片的间隔变量
+    private int time = 0;
+    // 图片轮播的序号
+    private int no = 0;
 
-    public Player(int x, int y, int mapX, int mapY, String url) {
-        super(x, y, mapX, mapY, "Player", url);
+    public Player(int mapX, int mapY, String url) {
+        super(mapX, mapY, "Player", url);
         setHp(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("PlayerLife")));
         setPlayType(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("PlayerPlayType")));
         setBombNum(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("PlayerBombNum")));
@@ -55,70 +60,121 @@ public class Player extends SuperElement{
         // 初始为静止状态
         setScore(0);
         setPk(false);
-        setUDMove(MoveEnum.stop);
-        setLRMove(MoveEnum.stop);
+        setMove(MoveEnum.stop);
     }
 
     // 自定义player创建方法
-    public static Player createPlayer(int x,int y,int mapX,int mapY,String url) {
-        return new Player(x,y,mapX,mapY,url);
+    public static Player createPlayer(int mapX,int mapY,String url) {
+        return new Player(mapX,mapY,url);
     }
 
     // player移动方法
     public void move() {
+
+        // 图片切换
+        switchImg();
+
+        // 角色格子坐标变化
+        calcGrid.parseGrid(getX(),getY());
+        setMapCol(calcGrid.getCol());
+        setMapRow(calcGrid.getRow());
+
         // 上下边界判定
         // 上下移动
-        switch (UDMove) {
+        switch (Move) {
             case top:
                 if (getY()<0) {
                     break;
                 } else {
                     setY(getY()-1);
                 }
-                break;
+                return;
             case down:
-                if (getY()+getH()>HEIGHT) {
+                if (getY()+getH()>getHEIGHT()) {
                     break;
                 } else {
                     setY(getY()+1);
                 }
-                break;
-            case stop:
-                break;
-            default:
-                break;
-        }
-
-        // 左右边界判定
-        // 左右移动
-        switch (LRMove) {
+                return;
             case left:
                 if (getX()<0) {
                     break;
                 } else {
                     setX(getX()-1);
                 }
-                break;
+                return;
             case right:
-                if (getX()+getW()>WIDTH) {
+                if (getX()+getW()>getWIDTH()) {
                     break;
                 } else {
                     setX(getX()+1);
                 }
-                break;
+                return;
             case stop:
                 break;
             default:
                 break;
+        }
+
+
+    }
+
+    private void switchImg() {
+        if (time >= getFPS()/8) {
+            time = 0;
+            no = (no+1)%cutImg.getMaxY();
+            switch (getMove()) {
+                case top:
+                    this.cutImg.setNoX(3);
+                    this.cutImg.setNoY(no);
+                    break;
+                case down:
+                    this.cutImg.setNoX(0);
+                    this.cutImg.setNoY(no);
+                    break;
+                case left:
+                    this.cutImg.setNoX(1);
+                    this.cutImg.setNoY(no);
+                    break;
+                case right:
+                    this.cutImg.setNoX(2);
+                    this.cutImg.setNoY(no);
+                    break;
+                case stop:
+                    if (getMove()==MoveEnum.stop) {
+                        this.cutImg.setNoY(0);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            time++;
         }
     }
 
     // player开火方法
     public void plantBomb() {
         // 如果处于攻击状态且可放置的炸弹数量不为0，才允许设置炸弹
-        if (isPk() && getBombNum()>0) {
+        if (isPk() && bombPlanted.size()<bombNum) {
+            bombPlanted.add(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombExplodeTime")));
+            setPk(false);
+            List<SuperElement> list = ElementManager.getElementManager().getElementList("Bomb");
+            list.add(Bomb.createBomb(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("BombImgSrc1")));
+        }
+    }
 
-
+    // 炸弹数量恢复
+    public void recoverBomb() {
+        if (bombPlanted.size()!=0) {
+            for (int i=0;i<bombPlanted.size();i++) {
+                int x = (int)bombPlanted.get(i);
+                if (x>0) {
+                    bombPlanted.set(i,--x);
+                } else {
+                    bombPlanted.remove(i);
+                }
+            }
         }
     }
 
@@ -127,14 +183,12 @@ public class Player extends SuperElement{
         // 如果有super，就是在父类update方法上追加
         super.update();
         this.plantBomb();
+        this.recoverBomb();
         this.destroy();
     }
 
     @Override
     public void showElement(Graphics g) {
-//        move();
-        // 画一整张完整的图
-//        g.drawImage(imageIcon.getImage(), getX(), getY(), getW(), getH(), null);
         // 截取图片一部分
         g.drawImage(getImg().getImage(),
                 getX(),getY(),                          //图片输出左上角坐标
@@ -142,8 +196,6 @@ public class Player extends SuperElement{
                 cutImg.getTopX(),cutImg.getTopY(),//截取的图片的左上角坐标
                 cutImg.getBottomX(),cutImg.getBottomY(),//截取的图片的右下角坐标
                 null);
-        cutImg.setNoY(1-cutImg.getNoY());
-        cutImg.changeImg(0, cutImg.getNoY());
     }
 
     @Override
@@ -171,20 +223,12 @@ public class Player extends SuperElement{
         this.score = score;
     }
 
-    public MoveEnum getUDMove() {
-        return UDMove;
+    public MoveEnum getMove() {
+        return Move;
     }
 
-    public void setUDMove(MoveEnum UDMove) {
-        this.UDMove = UDMove;
-    }
-
-    public MoveEnum getLRMove() {
-        return LRMove;
-    }
-
-    public void setLRMove(MoveEnum LRMove) {
-        this.LRMove = LRMove;
+    public void setMove(MoveEnum move) {
+        Move = move;
     }
 
     public boolean isPk() {

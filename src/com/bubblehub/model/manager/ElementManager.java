@@ -1,6 +1,9 @@
 package com.bubblehub.model.manager;
 
+import com.bubblehub.model.factory.ElementFactory;
+import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.vo.SuperElement;
+import com.bubblehub.model.vo.Tool;
 
 import java.util.*;
 
@@ -36,6 +39,20 @@ public class ElementManager {
         /* 把List放进map中
          * hashCode()中，Object根据集合散列进行
          */
+        List<SuperElement> player = new ArrayList<>();
+        player.add(ElementFactory.eFactory("Player"));
+        map.put("Player", player);
+
+        map.put("Bomb", new ArrayList<>());
+        map.put("BombTrack", new ArrayList<>());
+
+        List<SuperElement> wall = new ArrayList<>();
+        wall.add(ElementFactory.eFactory("Wall"));
+        map.put("Wall", wall);
+
+        List<SuperElement> tool = new ArrayList<>();
+        tool.add(ElementFactory.eFactory("Tool"));
+        map.put("Tool", tool);
 
     }
 

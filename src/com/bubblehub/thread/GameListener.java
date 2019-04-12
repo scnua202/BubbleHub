@@ -40,22 +40,26 @@ public class GameListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 //        System.out.println("keyPressed: " + e.getKeyCode());
-//        list = ElementManager.getElementManager().getElementList("Player");
-//        Player player = (Player)list.get(0);
-        Player player = null;
-
-        this.playerPressOperate(e, player);
+        list = ElementManager.getElementManager().getElementList("Player");
+        if (list.size() <= 0 ) {
+            return;
+        } else {
+            Player player = (Player)list.get(0);
+            this.playerPressOperate(e, player);
+        }
     }
 
     // 键盘松开
     @Override
     public void keyReleased(KeyEvent e) {
 //        System.out.println("keyReleased: " + e.getKeyCode());
-//        list = ElementManager.getElementManager().getElementList("Player");
-//        Player player = (Player)list.get(0);
-        Player player = null;
-
-        this.playerReleaseOperate(e, player);
+        list = ElementManager.getElementManager().getElementList("Player");
+        if (list.size() <= 0) {
+            return;
+        } else {
+            Player player = (Player)list.get(0);
+            this.playerReleaseOperate(e, player);
+        }
     }
 
     // 键盘字母区输入
@@ -74,40 +78,40 @@ public class GameListener implements KeyListener {
             switch (e.getKeyCode()) {
                 // 玩家1WASD移动
                 case 87:
-                    if (player.getUDMove() == MoveEnum.down) {
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.down) {
+                        player.setMove(MoveEnum.stop);
                     } else {
-                        player.setUDMove(MoveEnum.top);
+                        player.setMove(MoveEnum.top);
                     }
                     break;
                 case 83:
-                    if (player.getUDMove() == MoveEnum.top) {
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.top) {
+                        player.setMove(MoveEnum.stop);
                     } else {
-                        player.setUDMove(MoveEnum.down);
+                        player.setMove(MoveEnum.down);
                     }
                     break;
                 case 65:
-                    player.setLRMove(MoveEnum.left);
+                    player.setMove(MoveEnum.left);
                     break;
                 case 68:
-                    player.setLRMove(MoveEnum.right);
+                    player.setMove(MoveEnum.right);
                     break;
                 case 32:
                     player.setPk(true);
                     break;
                 // 玩家2小键盘方向键移动
                 case 38:
-                    player.setUDMove(MoveEnum.top);
+                    player.setMove(MoveEnum.top);
                     break;
                 case 40:
-                    player.setUDMove(MoveEnum.down);
+                    player.setMove(MoveEnum.down);
                     break;
                 case 37:
-                    player.setLRMove(MoveEnum.left);
+                    player.setMove(MoveEnum.left);
                     break;
                 case 39:
-                    player.setLRMove(MoveEnum.right);
+                    player.setMove(MoveEnum.right);
                     break;
                 case 47:
                     player.setPk(true);
@@ -126,40 +130,40 @@ public class GameListener implements KeyListener {
             switch (e.getKeyCode()) {
                 // 玩家1WASD移动
                 case 87:
-                    if (player.getUDMove() == MoveEnum.top)
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.top)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 83:
-                    if (player.getUDMove() == MoveEnum.down)
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.down)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 65:
-                    if (player.getUDMove() == MoveEnum.left)
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.left)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 68:
-                    if (player.getUDMove() == MoveEnum.right)
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.right)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 32:
                     player.setPk(false);
                     break;
                 // 玩家2小键盘移动
                 case 38:
-                    if (player.getUDMove() == MoveEnum.top)
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.top)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 40:
-                    if (player.getUDMove() == MoveEnum.down)
-                        player.setUDMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.down)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 37:
-                    if (player.getLRMove() == MoveEnum.left)
-                        player.setLRMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.left)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 39:
-                    if (player.getLRMove() == MoveEnum.right)
-                        player.setLRMove(MoveEnum.stop);
+                    if (player.getMove() == MoveEnum.right)
+                        player.setMove(MoveEnum.stop);
                     break;
                 case 47:
                     player.setPk(false);

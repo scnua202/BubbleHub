@@ -3,6 +3,7 @@ package com.bubblehub.model.vo;
 
 import com.bubblehub.model.loader.ElementLoader;
 import utils.CutImg;
+import utils.MoveEnum;
 
 import java.awt.*;
 
@@ -24,8 +25,8 @@ public class BombTrack extends SuperElement {
         super();
     }
 
-    public BombTrack(int x, int y, int mapX, int mapY, String url) {
-        super(x, y, mapX, mapY, "BombTrack", url);
+    public BombTrack(int mapX, int mapY, String url) {
+        super(mapX, mapY, "BombTrack", url);
         setKeepTime(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("TrackKeepTime")));
         if (Boolean.parseBoolean(ElementLoader.getElementLoader().getElementConfig("BombTrackCut"))) {
             this.cutImg = new CutImg(getImg(),
@@ -34,28 +35,64 @@ public class BombTrack extends SuperElement {
         }
     }
 
-    public static BombTrack createBombTrack(int x,int y,int mapX,int mapY,String url) {
-        return new BombTrack(x,y,mapX,mapY,url);
+    public static BombTrack createBombTrack(int mapX,int mapY,String url) {
+        return new BombTrack(mapX,mapY,url);
     }
 
     @Override
     public void showElement(Graphics g) {
+        // 截取图片一部分
+        g.drawImage(getImg().getImage(),
+                getX(),getY(),                          //图片输出左上角坐标
+                getX()+getW(),getY()+getH(),  //图片输出右下角坐标
+                cutImg.getTopX(),cutImg.getTopY(),//截取的图片的左上角坐标
+                cutImg.getBottomX(),cutImg.getBottomY(),//截取的图片的右下角坐标
+                null);
+    }
 
+    public void setDirection(MoveEnum moveEnum, boolean isEnd, int i) {
+        switch (moveEnum) {
+            case top:
+                setY(getY()-i*getH());
+                cutImg.setNoX(0);
+                break;
+            case down:
+                setY(getY()+i*getH());
+                cutImg.setNoX(1);
+                break;
+            case left:
+                setX(getX()-i*getW());
+                cutImg.setNoX(2);
+                break;
+            case right:
+                setX(getX()+i*getW());
+                cutImg.setNoX(3);
+            default:
+                break;
+        }
+        if (isEnd) {
+            cutImg.setNoY(0);
+        } else {
+            cutImg.setNoY(1);
+        }
     }
 
     @Override
     public void move() {
-
+        keepTime--;
     }
 
     @Override
     public void destroy() {
-
+        if (keepTime < 0) {
+            setVisible(false);
+        }
     }
 
     @Override
     public void update() {
         super.update();
+        this.destroy();
     }
 
     public int getKeepTime() {

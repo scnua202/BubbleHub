@@ -15,8 +15,8 @@ public class NullElement extends SuperElement {
         super();
     }
 
-    public NullElement(int x, int y, int mapX, int mapY, String name, String url) {
-        super(x, y, mapX, mapY, name, url);
+    public NullElement(int mapX, int mapY, String name, String url) {
+        super(mapX, mapY, name, url);
     }
 
     @Override

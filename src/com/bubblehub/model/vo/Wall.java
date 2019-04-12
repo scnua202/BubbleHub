@@ -21,8 +21,8 @@ public class Wall extends SuperElement {
         super();
     }
 
-    public Wall(int x, int y, int mapX, int mapY, String url) {
-        super(x, y, mapX, mapY, "Wall", url);
+    public Wall(int mapX, int mapY, String url) {
+        super(mapX, mapY, "Wall", url);
         if (Boolean.parseBoolean(ElementLoader.getElementLoader().getElementConfig("WallCut"))) {
             this.cutImg = new CutImg(getImg(),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("WallCutX")),
@@ -30,13 +30,19 @@ public class Wall extends SuperElement {
         }
     }
 
-    public static Wall createWall(int x, int y, int mapX, int mapY, String url) {
-        return new Wall(x,y,mapX,mapY,url);
+    public static Wall createWall(int mapX, int mapY, String url) {
+        return new Wall(mapX,mapY,url);
     }
 
     @Override
     public void showElement(Graphics g) {
-
+        // 截取图片一部分
+        g.drawImage(getImg().getImage(),
+                getX(),getY(),                          //图片输出左上角坐标
+                getX()+getW(),getY()+getH(),  //图片输出右下角坐标
+                cutImg.getTopX(),cutImg.getTopY(),//截取的图片的左上角坐标
+                cutImg.getBottomX(),cutImg.getBottomY(),//截取的图片的右下角坐标
+                null);
     }
 
     @Override

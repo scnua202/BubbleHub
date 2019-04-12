@@ -17,17 +17,20 @@ public class ElementFactory {
         switch (s) {
             case "Bomb":
                 String urlBomb = ElementLoader.getElementLoader().getElementConfig("BombImgSrc1");
-                return Bomb.createBomb(200,200,12,12,urlBomb);
+                return Bomb.createBomb(0,0,urlBomb);
             case "BombTrack":
                 String urlBombTrack = ElementLoader.getElementLoader().getElementConfig("TrackImgSrc1");
-                return BombTrack.createBombTrack(150,150,11,11,urlBombTrack);
+                return BombTrack.createBombTrack(0,0,urlBombTrack);
             case "Wall":
                 String urlWall = ElementLoader.getElementLoader().getElementConfig("WallImgSrc1");
-                return Wall.createWall(250,250,13,13,urlWall);
+                return Wall.createWall(1,1,urlWall);
             case "Player":
                 String type = ElementLoader.getElementLoader().getElementConfig("PlayerPlayType");
                 String urlPlayer = ElementLoader.getElementLoader().getElementConfig("PlayerImgSrc"+type);
-                return Player.createPlayer(100,100,10,10,urlPlayer);
+                return Player.createPlayer(0,0,urlPlayer);
+            case "Tool":
+                String urlTool = ElementLoader.getElementLoader().getElementConfig("ToolImgAttack");
+                return Tool.createTool(15,11,urlTool);
             default:
                 return new NullElement();
         }

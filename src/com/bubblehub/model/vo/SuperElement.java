@@ -1,6 +1,7 @@
 package com.bubblehub.model.vo;
 
 import com.bubblehub.model.loader.ElementLoader;
+import utils.CalcGrid;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +18,13 @@ import java.awt.*;
 
 public abstract class SuperElement {
 
+    // 游戏运行参数(FPS,每帧渲染间隔时间)
+    private final int FPS = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("FPS"));
+    private final int SLEEPTIME =Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("SleepTime"));
+
     // 游戏屏幕分辨率
-    public int WIDTH;
-    public int HEIGHT;
+    private int WIDTH;
+    private int HEIGHT;
 
     // 位置，宽高
     private int x;
@@ -28,8 +33,11 @@ public abstract class SuperElement {
     private int h;
 
     // 地图格子坐标
-    private int mapX;
-    private int mapY;
+    private int MapCol;
+    private int MapRow;
+
+    // 地图格子坐标和像素点互转工具
+    public CalcGrid calcGrid;
 
     // 默认为true，代表生命周期
     private boolean visible;
@@ -53,11 +61,12 @@ public abstract class SuperElement {
      */
     public SuperElement() { }
 
-    public SuperElement(int x, int y, int mapX, int mapY, String name, String url) {
-        this.x = x;
-        this.y = y;
-        this.mapX = mapX;
-        this.mapY = mapY;
+    public SuperElement(int MapCol, int MapRow, String name, String url) {
+        this.calcGrid = new CalcGrid(MapRow ,MapCol);
+        this.x = calcGrid.getX();
+        this.y = calcGrid.getY();
+        this.MapCol = MapCol;
+        this.MapRow = MapRow;
         this.w = Integer.parseInt(ElementLoader.getElementLoader().getElementConfig(name+"Height"));
         this.h = Integer.parseInt(ElementLoader.getElementLoader().getElementConfig(name+"Width"));
         this.WIDTH = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Width"));
@@ -167,19 +176,35 @@ public abstract class SuperElement {
         MoveAble = moveAble;
     }
 
-    public int getMapX() {
-        return mapX;
+    public int getMapCol() {
+        return MapCol;
     }
 
-    public void setMapX(int mapX) {
-        this.mapX = mapX;
+    public void setMapCol(int MapCol) {
+        this.MapCol = MapCol;
     }
 
-    public int getMapY() {
-        return mapY;
+    public int getMapRow() {
+        return MapRow;
     }
 
-    public void setMapY(int mapY) {
-        this.mapY = mapY;
+    public void setMapRow(int MapRow) {
+        this.MapRow = MapRow;
+    }
+
+    public int getFPS() {
+        return FPS;
+    }
+
+    public int getSLEEPTIME() {
+        return SLEEPTIME;
+    }
+
+    public CalcGrid getCalcGrid() {
+        return calcGrid;
+    }
+
+    public void setCalcGrid(CalcGrid calcGrid) {
+        this.calcGrid = calcGrid;
     }
 }

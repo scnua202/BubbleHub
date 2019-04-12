@@ -1,9 +1,12 @@
 package com.bubblehub.model.vo;
 
 import com.bubblehub.model.loader.ElementLoader;
+import com.bubblehub.model.manager.ElementManager;
 import utils.CutImg;
+import utils.MoveEnum;
 
 import java.awt.*;
+import java.util.List;
 
 /**
  * @Author Fisher
@@ -21,44 +24,86 @@ public class Bomb extends SuperElement {
 
     // 记录图片左上角像素坐标
     private CutImg cutImg;
+    // 切换图片的间隔变量
+    private int time = 0;
+    // 图片轮播的序号
+    private int no = 0;
 
     public Bomb() {
         super();
     }
 
-    public Bomb(int x, int y, int mapX, int mapY, String url) {
-        super(x, y, mapX, mapY, "Bomb", url);
+    public Bomb(int mapX, int mapY, String url) {
+        super(mapX, mapY, "Bomb", url);
         setExplodeTime(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombExplodeTime")));
         if (Boolean.parseBoolean(ElementLoader.getElementLoader().getElementConfig("BombCut"))) {
             this.cutImg = new CutImg(getImg(),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombCutX")),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombCutY")));
         }
-        setPower(2);
+        setPower(5);
     }
 
-    public static Bomb createBomb(int x,int y,int mapX,int mapY,String url) {
-        return new Bomb(x,y,mapX,mapY,url);
+    public static Bomb createBomb(int mapX,int mapY,String url) {
+        return new Bomb(mapX,mapY,url);
     }
 
     @Override
     public void showElement(Graphics g) {
-
+//        System.out.println("x:"+getX()+"y:"+getY());
+//        System.out.println("w:"+getW()+"h:"+getH());
+//        System.out.println("topx:"+cutImg.getTopX()+"topY:"+cutImg.getTopY());
+//        System.out.println("Bottomx:"+cutImg.getBottomX()+"BottomY:"+cutImg.getBottomY());
+        // 截取图片一部分
+        g.drawImage(getImg().getImage(),
+                getX(),getY(),                          //图片输出左上角坐标
+                getX()+getW(),getY()+getH(),  //图片输出右下角坐标
+                cutImg.getTopX(),cutImg.getTopY(),//截取的图片的左上角坐标
+                cutImg.getBottomX(),cutImg.getBottomY(),//截取的图片的右下角坐标
+                null);
     }
 
+    // Bomb的移动方法就是图片的轮播，爆炸时间的缩短
     @Override
     public void move() {
-
+        explodeTime--;
+        // 图片轮播
+        if (time >= getFPS()/8) {
+            time = 0;
+            no = (no+1)%cutImg.getMaxY();
+            cutImg.setNoY(no);
+        } else {
+            time++;
+        }
     }
 
     @Override
     public void destroy() {
-
+        if (explodeTime<0) {
+            MoveEnum[] direction = {MoveEnum.top, MoveEnum.down, MoveEnum.left, MoveEnum.right};
+            List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
+            // 炸弹中心爆炸效果
+            list.add(BombTrack.createBombTrack(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc2")));
+            // 炸弹轨迹
+            for (int i=0; i<power; i++) {
+                for (int j=0; j<4; j++) {
+                    Boolean isEnd = false;
+                    if (i == power-1) {
+                        isEnd = true;
+                    }
+                    BombTrack track = BombTrack.createBombTrack(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc1"));
+                    track.setDirection(direction[j], isEnd, i);
+                    list.add(track);
+                }
+            }
+            setVisible(false);
+        }
     }
 
     @Override
     public void update() {
         super.update();
+        this.destroy();
     }
 
     public int getExplodeTime() {
