@@ -42,6 +42,7 @@ public class Bomb extends SuperElement {
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombCutY")));
         }
         setPower(5);
+        setName("Bomb");
     }
 
     public static Bomb createBomb(int mapX,int mapY,String url) {

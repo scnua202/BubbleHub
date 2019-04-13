@@ -33,6 +33,7 @@ public class Tool extends SuperElement {
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("ToolCutY")));
         }
         setPicked(false);
+        setName("Tool");
     }
 
     public static Tool createTool(int mapX, int mapY, String url) {

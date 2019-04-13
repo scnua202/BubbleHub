@@ -33,6 +33,7 @@ public class BombTrack extends SuperElement {
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombTrackCutX")),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombTrackCutY")));
         }
+        setName("BombTrack");
     }
 
     public static BombTrack createBombTrack(int mapX,int mapY,String url) {

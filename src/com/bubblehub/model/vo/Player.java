@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author Fisher
@@ -61,6 +62,7 @@ public class Player extends SuperElement{
         setScore(0);
         setPk(false);
         setMove(MoveEnum.stop);
+        setName("Player");
     }
 
     // 自定义player创建方法
@@ -115,10 +117,9 @@ public class Player extends SuperElement{
             default:
                 break;
         }
-
-
     }
 
+    // 角色方向发生变化时，图片的切换
     private void switchImg() {
         if (time >= getFPS()/8) {
             time = 0;
@@ -153,6 +154,46 @@ public class Player extends SuperElement{
         }
     }
 
+    // 判断人物能否向目标方向移动
+    private boolean canIMove() {
+        List<SuperElement> list = ElementManager.getElementManager().getElementList("Bomb");
+        for (SuperElement x:list) {
+            if (x.getMapRow() == this.getMapRow()) {
+                switch (getMove()) {
+                    case left:
+                        if (x.getMapCol()+1==this.getMapCol()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    case right:
+                        if (x.getMapCol()-1==this.getMapCol()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                }
+            }
+            if (x.getMapCol() == this.getMapCol()) {
+                switch (getMove()) {
+                    case top:
+                        if (x.getMapRow()+1==this.getMapRow()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    case down:
+                        if (x.getMapRow()-1==this.getMapRow()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                }
+            }
+        }
+        return true;
+    }
+
     // player开火方法
     public void plantBomb() {
         // 如果处于攻击状态且可放置的炸弹数量不为0，才允许设置炸弹
@@ -174,6 +215,52 @@ public class Player extends SuperElement{
                 } else {
                     bombPlanted.remove(i);
                 }
+            }
+        }
+    }
+
+    // 对于人物的碰撞事件
+    public void gameControl() {
+        // 对于BombTrack的碰撞事件
+        List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
+        for (SuperElement x:list) {
+            if (x.getMapRow() == this.getMapRow()) {
+                if (x.getMapCol() == this.getMapCol()) {
+                    // 如果人物位置正好在bombTrack上，则生命值-1
+                    this.hp--;
+                }
+            }
+        }
+
+        // 对于Tool的碰撞事件
+        List<SuperElement> list1 = ElementManager.getElementManager().getElementList("Tool");
+        for (SuperElement x:list1) {
+            if (x.getMapRow() == this.getMapRow()) {
+                if (x.getMapCol() == this.getMapCol()) {
+                    // 如果人物位置正好在tool上，人物增加相应buff
+                    this.addBuff(x);
+                    // 道具消失
+                    x.setVisible(false);
+                }
+            }
+        }
+    }
+
+    // 人物拾取道具之后添加buff
+    private void addBuff(SuperElement s) {
+        if (s instanceof Tool) {
+            switch(((Tool) s).getToolType()) {
+                case life:
+                    this.hp++;
+                    break;
+                case attack:
+                    this.power++;
+                    break;
+                case dontMove:
+                    this.setMoveAble(false);
+                    break;
+                default:
+                    break;
             }
         }
     }

@@ -39,7 +39,6 @@ public class GameThread extends Thread {
             // 1. 加载地图，人物
             loadElement();
             // 2. 显示人物、地图
-            time = 0;   //开始记录时间
             runGame();
             // 3. 结束本地图
             overGame();
@@ -75,11 +74,8 @@ public class GameThread extends Thread {
                 }
             }
 
-            // 游戏流程控制 -> 敌机出现的控制
-            if ( time >= FPS) {
-                time = 0;
-                this.EnemyControl();
-            }
+            // 游戏流程控制
+            this.MapControl();
 
             // player处于死亡状态时，结束游戏
 
@@ -88,13 +84,12 @@ public class GameThread extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            time++;
         }
 
     }
 
     // 游戏流程控制
-    public void EnemyControl() {
+    public void MapControl() {
 
     }
 

@@ -18,6 +18,9 @@ import java.awt.*;
 
 public abstract class SuperElement {
 
+    // 元素类型名称
+    private String name;
+
     // 游戏运行参数(FPS,每帧渲染间隔时间)
     private final int FPS = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("FPS"));
     private final int SLEEPTIME =Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("SleepTime"));
@@ -206,5 +209,13 @@ public abstract class SuperElement {
 
     public void setCalcGrid(CalcGrid calcGrid) {
         this.calcGrid = calcGrid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

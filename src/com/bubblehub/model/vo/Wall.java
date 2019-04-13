@@ -28,6 +28,7 @@ public class Wall extends SuperElement {
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("WallCutX")),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("WallCutY")));
         }
+        setName("Wall");
     }
 
     public static Wall createWall(int mapX, int mapY, String url) {
