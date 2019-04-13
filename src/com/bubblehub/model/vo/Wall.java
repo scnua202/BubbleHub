@@ -28,6 +28,7 @@ public class Wall extends SuperElement {
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("WallCutX")),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("WallCutY")));
         }
+        cutImg.setNoY(1);
         setName("Wall");
     }
 

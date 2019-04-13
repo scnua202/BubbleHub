@@ -82,6 +82,7 @@ public class Bomb extends SuperElement {
     public void destroy() {
         if (explodeTime<0) {
             MoveEnum[] direction = {MoveEnum.top, MoveEnum.down, MoveEnum.left, MoveEnum.right};
+            boolean[] needShow = {true,true,true,true};
             List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
             // 炸弹中心爆炸效果
             list.add(BombTrack.createBombTrack(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc2")));
@@ -92,13 +93,75 @@ public class Bomb extends SuperElement {
                     if (i == power-1) {
                         isEnd = true;
                     }
-                    BombTrack track = BombTrack.createBombTrack(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc1"));
-                    track.setDirection(direction[j], isEnd, i);
-                    list.add(track);
+                    if (!needShow[j]) {
+                        continue;
+                    } else {
+                        if (canIDisplay(i,direction[j])) {
+                            BombTrack track = BombTrack.createBombTrack(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc1"));
+                            track.setDirection(direction[j], isEnd, i);
+                            list.add(track);
+                        } else {
+                            needShow[j] = false;
+                        }
+                    }
+
                 }
             }
             setVisible(false);
         }
+    }
+
+    // 判断轨迹是否需要显示（是否撞到墙了）
+    private boolean canIDisplay(int i, MoveEnum direction) {
+        List<SuperElement> list = ElementManager.getElementManager().getElementList("Wall");
+        for (SuperElement x:list) {
+            if (x.getMapCol()==this.getMapCol()) {
+                switch (direction) {
+                    case top:
+                        if (x.getMapRow()+i==this.getMapRow()) {
+                            // 如果墙可以炸坏
+                            if (x.isThroughAble()) {
+                                x.setVisible(false);
+                            }
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    case down:
+                        if (x.getMapRow()-i==this.getMapRow()) {
+                            if (x.isThroughAble()) {
+                                x.setVisible(false);
+                            }
+                            return false;
+                        } else {
+                            return true;
+                        }
+                }
+            }
+            if (x.getMapRow()==this.getMapRow()) {
+                switch (direction) {
+                    case left:
+                        if (x.getMapCol()+i==this.getMapCol()) {
+                            if (x.isThroughAble()) {
+                                x.setVisible(false);
+                            }
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    case right:
+                        if (x.getMapCol()-i==this.getMapCol()) {
+                            if (x.isThroughAble()) {
+                                x.setVisible(false);
+                            }
+                            return false;
+                        } else {
+                            return true;
+                        }
+                }
+            }
+        }
+        return true;
     }
 
     @Override

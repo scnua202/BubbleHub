@@ -48,6 +48,8 @@ public class CalcGrid {
      * @param y
      */
     public void parseGrid(int x, int y) {
+        this.x = x;
+        this.y = y;
         col = x/GRIDCOL;
         row = y/GRIDROW;
     }

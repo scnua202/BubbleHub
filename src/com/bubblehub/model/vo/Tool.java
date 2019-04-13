@@ -32,6 +32,7 @@ public class Tool extends SuperElement {
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("ToolCutX")),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("ToolCutY")));
         }
+        this.toolType = ToolType.attack;
         setPicked(false);
         setName("Tool");
     }

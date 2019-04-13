@@ -13,24 +13,24 @@ import com.bubblehub.model.vo.*;
  */
 public class ElementFactory {
 
-    public static SuperElement eFactory(String s) {
+    public static SuperElement eFactory(String s, int col, int row) {
         switch (s) {
             case "Bomb":
                 String urlBomb = ElementLoader.getElementLoader().getElementConfig("BombImgSrc1");
-                return Bomb.createBomb(0,0,urlBomb);
+                return Bomb.createBomb(row,col,urlBomb);
             case "BombTrack":
                 String urlBombTrack = ElementLoader.getElementLoader().getElementConfig("TrackImgSrc1");
-                return BombTrack.createBombTrack(0,0,urlBombTrack);
+                return BombTrack.createBombTrack(row,col,urlBombTrack);
             case "Wall":
                 String urlWall = ElementLoader.getElementLoader().getElementConfig("WallImgSrc1");
-                return Wall.createWall(1,1,urlWall);
+                return Wall.createWall(row,col,urlWall);
             case "Player":
                 String type = ElementLoader.getElementLoader().getElementConfig("PlayerPlayType");
                 String urlPlayer = ElementLoader.getElementLoader().getElementConfig("PlayerImgSrc"+type);
-                return Player.createPlayer(0,0,urlPlayer);
+                return Player.createPlayer(row,col,urlPlayer);
             case "Tool":
                 String urlTool = ElementLoader.getElementLoader().getElementConfig("ToolImgAttack");
-                return Tool.createTool(15,11,urlTool);
+                return Tool.createTool(row,col,urlTool);
             default:
                 return new NullElement();
         }

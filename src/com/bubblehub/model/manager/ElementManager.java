@@ -40,18 +40,33 @@ public class ElementManager {
          * hashCode()中，Object根据集合散列进行
          */
         List<SuperElement> player = new ArrayList<>();
-        player.add(ElementFactory.eFactory("Player"));
-        map.put("Player", player);
-
-        map.put("Bomb", new ArrayList<>());
-        map.put("BombTrack", new ArrayList<>());
-
+        List<SuperElement> bomb = new ArrayList<>();
+        List<SuperElement> bombTrack = new ArrayList<>();
         List<SuperElement> wall = new ArrayList<>();
-        wall.add(ElementFactory.eFactory("Wall"));
-        map.put("Wall", wall);
-
         List<SuperElement> tool = new ArrayList<>();
-        tool.add(ElementFactory.eFactory("Tool"));
+
+        for (int i=0; i<Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Row")); i++) {
+            String x = ElementLoader.getElementLoader().getElementConfig("row"+i);
+            String[] item = x.split(",");
+            for (int j=0; j<Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Col")); j++) {
+                switch (item[j]) {
+                    case "1":
+                        wall.add(ElementFactory.eFactory("Wall",i,j));
+                        break;
+                    case "2":
+                        wall.add(ElementFactory.eFactory("Wall",i,j));
+                        break;
+                    case "3":
+                        player.add(ElementFactory.eFactory("Player",i,j));
+                        break;
+                }
+            }
+        }
+
+        map.put("Player", player);
+        map.put("Bomb", bomb);
+        map.put("BombTrack", bombTrack);
+        map.put("Wall", wall);
         map.put("Tool", tool);
 
     }

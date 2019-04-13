@@ -77,39 +77,57 @@ public class Player extends SuperElement{
         switchImg();
 
         // 角色格子坐标变化
-        calcGrid.parseGrid(getX(),getY());
-        setMapCol(calcGrid.getCol());
-        setMapRow(calcGrid.getRow());
+//        calcGrid.parseGrid(getX(),getY());
+//        setMapCol(calcGrid.getCol());
+//        setMapRow(calcGrid.getRow());
+        calcGrid.parsePixel();
+        setX(calcGrid.getX());
+        setY(calcGrid.getY());
 
+        if (!canIMove("Wall")) {
+            return;
+        }
+
+        if (!canIMove("Bomb")) {
+            return;
+        }
+
+        if (time < getFPS()/4) {
+            return;
+        }
         // 上下边界判定
         // 上下移动
         switch (Move) {
             case top:
-                if (getY()<0) {
+                if (getMapRow()<0) {
                     break;
                 } else {
-                    setY(getY()-1);
+                    setMapRow(getMapRow()-1);
+                    calcGrid.setRow(getMapRow()-1);
                 }
                 return;
             case down:
-                if (getY()+getH()>getHEIGHT()) {
+                if (getMapRow()>=11) {
                     break;
                 } else {
-                    setY(getY()+1);
+                    setMapRow(getMapRow()+1);
+                    calcGrid.setRow(getMapRow()+1);
                 }
                 return;
             case left:
-                if (getX()<0) {
+                if (getMapCol()<0) {
                     break;
                 } else {
-                    setX(getX()-1);
+                    setMapCol(getMapCol()-1);
+                    calcGrid.setCol(getMapCol()-1);
                 }
                 return;
             case right:
-                if (getX()+getW()>getWIDTH()) {
+                if (getMapCol()>=15) {
                     break;
                 } else {
-                    setX(getX()+1);
+                    setMapCol(getMapCol()+1);
+                    calcGrid.setCol(getMapCol()+1);
                 }
                 return;
             case stop:
@@ -121,7 +139,7 @@ public class Player extends SuperElement{
 
     // 角色方向发生变化时，图片的切换
     private void switchImg() {
-        if (time >= getFPS()/8) {
+        if (time >= getFPS()/4) {
             time = 0;
             no = (no+1)%cutImg.getMaxY();
             switch (getMove()) {
@@ -155,8 +173,9 @@ public class Player extends SuperElement{
     }
 
     // 判断人物能否向目标方向移动
-    private boolean canIMove() {
-        List<SuperElement> list = ElementManager.getElementManager().getElementList("Bomb");
+    private boolean canIMove(String str) {
+        List<SuperElement> list = ElementManager.getElementManager().getElementList(str);
+//        list.addAll(ElementManager.getElementManager().getElementList("Bomb"));
         for (SuperElement x:list) {
             if (x.getMapRow() == this.getMapRow()) {
                 switch (getMove()) {
@@ -208,7 +227,7 @@ public class Player extends SuperElement{
     // 炸弹数量恢复
     public void recoverBomb() {
         if (bombPlanted.size()!=0) {
-            for (int i=0;i<bombPlanted.size();i++) {
+            for (int i=bombPlanted.size()-1;i>=0;i--) {
                 int x = (int)bombPlanted.get(i);
                 if (x>0) {
                     bombPlanted.set(i,--x);
@@ -269,9 +288,10 @@ public class Player extends SuperElement{
     public void update() {
         // 如果有super，就是在父类update方法上追加
         super.update();
+        this.gameControl();
+        this.destroy();
         this.plantBomb();
         this.recoverBomb();
-        this.destroy();
     }
 
     @Override
