@@ -1,8 +1,8 @@
 package com.bubblehub.frame;
 
 import com.bubblehub.model.loader.ElementLoader;
+import com.bubblehub.model.loader.myMusicPlay;
 import com.bubblehub.thread.GameThread;
-import com.bubblehub.thread.NetworkThread;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +57,11 @@ public class MainFrame extends JFrame {
         this.addListener();
         // 添加画板，这里使用手动添加
 //        this.addJPanel();
+    }
+    //播放游戏bgm
+    public void playGameBgm() {
+        myMusicPlay audioPlayWave = new myMusicPlay("resources/gameBgm.wav");// 开音乐
+        audioPlayWave.start();
     }
 
     // 游戏启动

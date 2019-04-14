@@ -56,8 +56,16 @@ public class MainJPanel extends JPanel implements Runnable{
         super.paint(g);
 
         // 设置画板背景颜色
-        this.setBackground(Color.GRAY);
-        this.paintComponent(g);
+        //this.setBackground(Color.GRAY);
+        //this.paintComponent(g);
+        // 添加背景图片
+        ImageIcon bgImg = new ImageIcon("resources/img/backgroundMap2.png");
+        JLabel bgLabel = new JLabel();
+        bgLabel.setIcon(bgImg);
+        bgLabel.setBounds(0,0,820,625);
+        this.add(bgLabel);
+
+
         // 计算FPS
         cfpsMaker.makeFPS();
         // 给一个判定值，可以使用枚举
