@@ -1,6 +1,7 @@
 package com.bubblehub.thread;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
 import com.bubblehub.model.vo.DataPackage;
 import com.bubblehub.model.vo.Player;
@@ -10,6 +11,7 @@ import com.bubblehub.thread.Client.ReceiveThread;
 import com.bubblehub.thread.Client.RefreshPlayer;
 import com.bubblehub.thread.Client.SendThread;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +24,13 @@ public class NetworkThread extends Thread implements MsgProvider, RefreshPlayer 
 
     private SendThread sendThread;
 
+    private String serverIp = ElementLoader.getElementLoader().getGlobalConfig("ServerIp");
+
+    private int serverPort = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("ServerPort"));
+
     public NetworkThread() {
         try {
-            sendThread = new SendThread("localhost",9876,this,this);
+            sendThread = new SendThread(serverIp,serverPort,this,this);
             sendThread.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,8 +39,9 @@ public class NetworkThread extends Thread implements MsgProvider, RefreshPlayer 
 
     @Override
     public String getDataFromObject() {
-        List<SuperElement> list = ElementManager.getElementManager().getElementList("Player");
-        return list.get(0).toString();
+        List<SuperElement> playerlist = ElementManager.getElementManager().getElementList("Player");
+        // 将自己的数据发送
+        return playerlist.get(0).toString();
     }
 
     @Override

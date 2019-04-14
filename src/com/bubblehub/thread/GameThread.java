@@ -71,8 +71,11 @@ public class GameThread extends Thread {
     }
 
     private void loadElement() {
-        networkThread = new NetworkThread();
-        networkThread.start();
+        // 如果启动了联机对战，则新建网络线程
+        if (Boolean.parseBoolean(ElementLoader.getElementLoader().getGlobalConfig("Online"))) {
+            networkThread = new NetworkThread();
+            networkThread.start();
+        }
     }
 
     private void runGame() {
@@ -110,11 +113,21 @@ public class GameThread extends Thread {
 
     // 游戏流程控制
     public void MapControl(DataPackage dataPackage) {
-        List<SuperElement> list = ElementManager.getElementManager().getElementList("Player");
-        SuperElement superElement = list.get(1);
-        superElement.getCalcGrid().setRow(dataPackage.getRow()+1);
-        superElement.getCalcGrid().setCol(dataPackage.getCol()+1);
-        list.set(1,superElement);
+        switch (dataPackage.getType()) {
+            // 墙体
+            case 1:
+                break;
+            // 玩家
+            case 3:
+                if (dataPackage.getIndex()==Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("PlayerIndex"))) {
+                    List<SuperElement> list = ElementManager.getElementManager().getElementList("Player");
+                    SuperElement superElement = list.get(1);
+                    superElement.getCalcGrid().setRow(dataPackage.getRow());
+                    superElement.getCalcGrid().setCol(dataPackage.getCol());
+                    list.set(1,superElement);
+                }
+                break;
+        }
     }
 
     // 游戏结束控制

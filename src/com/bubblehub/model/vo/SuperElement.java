@@ -1,6 +1,7 @@
 package com.bubblehub.model.vo;
 
 import com.bubblehub.model.loader.ElementLoader;
+import com.bubblehub.model.manager.ElementManager;
 import utils.CalcGrid;
 
 import javax.swing.*;

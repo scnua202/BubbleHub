@@ -1,5 +1,6 @@
 package com.bubblehub.model.vo;
 
+import com.alibaba.fastjson.JSON;
 import com.bubblehub.model.loader.ElementLoader;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import utils.CutImg;
@@ -55,6 +56,13 @@ public class Wall extends SuperElement {
     @Override
     public void destroy() {
 
+    }
+
+    @Override
+    public String toString() {
+        DataPackage dataPackage = new DataPackage(1, getIndex(), calcGrid.getRow(), calcGrid.getCol());
+        String s = JSON.toJSONString(dataPackage);
+        return s;
     }
 
     @Override

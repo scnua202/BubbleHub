@@ -2,6 +2,7 @@ package com.bubblehub.thread;
 
 import com.bubblehub.model.manager.ElementManager;
 import com.bubblehub.model.vo.Player;
+import com.bubblehub.model.vo.SuperElement;
 import utils.MoveEnum;
 
 import java.awt.event.KeyEvent;
@@ -44,8 +45,10 @@ public class GameListener implements KeyListener {
         if (list.size() <= 0 ) {
             return;
         } else {
-            Player player = (Player)list.get(0);
-            this.playerPressOperate(e, player);
+            for (int i=0; i<list.size(); i++) {
+                Player player = (Player)list.get(i);
+                this.playerPressOperate(e, player);
+            }
         }
     }
 
@@ -57,8 +60,10 @@ public class GameListener implements KeyListener {
         if (list.size() <= 0) {
             return;
         } else {
-            Player player = (Player)list.get(0);
-            this.playerReleaseOperate(e, player);
+            for (int i=0; i<list.size(); i++) {
+                Player player = (Player)list.get(i);
+                this.playerReleaseOperate(e, player);
+            }
         }
     }
 
@@ -75,49 +80,57 @@ public class GameListener implements KeyListener {
         if (player == null) {
             return;
         } else {
-            switch (e.getKeyCode()) {
-                // 玩家1WASD移动
-                case 87:
-                    if (player.getMove() == MoveEnum.down) {
-                        player.setMove(MoveEnum.stop);
-                    } else {
+            if (player.getPlayType() == 1) {
+                switch (e.getKeyCode()) {
+                    // 玩家1WASD移动
+                    case 87:
+                        if (player.getMove() == MoveEnum.down) {
+                            player.setMove(MoveEnum.stop);
+                        } else {
+                            player.setMove(MoveEnum.top);
+                        }
+                        break;
+                    case 83:
+                        if (player.getMove() == MoveEnum.top) {
+                            player.setMove(MoveEnum.stop);
+                        } else {
+                            player.setMove(MoveEnum.down);
+                        }
+                        break;
+                    case 65:
+                        player.setMove(MoveEnum.left);
+                        break;
+                    case 68:
+                        player.setMove(MoveEnum.right);
+                        break;
+                    case 32:
+                        player.setPk(true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (player.getPlayType() == 2) {
+                switch (e.getKeyCode()) {
+                    // 玩家2小键盘方向键移动
+                    case 38:
                         player.setMove(MoveEnum.top);
-                    }
-                    break;
-                case 83:
-                    if (player.getMove() == MoveEnum.top) {
-                        player.setMove(MoveEnum.stop);
-                    } else {
+                        break;
+                    case 40:
                         player.setMove(MoveEnum.down);
-                    }
-                    break;
-                case 65:
-                    player.setMove(MoveEnum.left);
-                    break;
-                case 68:
-                    player.setMove(MoveEnum.right);
-                    break;
-                case 32:
-                    player.setPk(true);
-                    break;
-                // 玩家2小键盘方向键移动
-                case 38:
-                    player.setMove(MoveEnum.top);
-                    break;
-                case 40:
-                    player.setMove(MoveEnum.down);
-                    break;
-                case 37:
-                    player.setMove(MoveEnum.left);
-                    break;
-                case 39:
-                    player.setMove(MoveEnum.right);
-                    break;
-                case 47:
-                    player.setPk(true);
-                    break;
-                default:
-                    break;
+                        break;
+                    case 37:
+                        player.setMove(MoveEnum.left);
+                        break;
+                    case 39:
+                        player.setMove(MoveEnum.right);
+                        break;
+                    case 47:
+                        player.setPk(true);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -127,49 +140,57 @@ public class GameListener implements KeyListener {
         if (player == null) {
             return;
         } else {
-            switch (e.getKeyCode()) {
-                // 玩家1WASD移动
-                case 87:
-                    if (player.getMove() == MoveEnum.top)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 83:
-                    if (player.getMove() == MoveEnum.down)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 65:
-                    if (player.getMove() == MoveEnum.left)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 68:
-                    if (player.getMove() == MoveEnum.right)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 32:
-                    player.setPk(false);
-                    break;
-                // 玩家2小键盘移动
-                case 38:
-                    if (player.getMove() == MoveEnum.top)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 40:
-                    if (player.getMove() == MoveEnum.down)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 37:
-                    if (player.getMove() == MoveEnum.left)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 39:
-                    if (player.getMove() == MoveEnum.right)
-                        player.setMove(MoveEnum.stop);
-                    break;
-                case 47:
-                    player.setPk(false);
-                    break;
-                default:
-                    break;
+            if (player.getPlayType() == 1) {
+                switch (e.getKeyCode()) {
+                    // 玩家1WASD移动
+                    case 87:
+                        if (player.getMove() == MoveEnum.top)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 83:
+                        if (player.getMove() == MoveEnum.down)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 65:
+                        if (player.getMove() == MoveEnum.left)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 68:
+                        if (player.getMove() == MoveEnum.right)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 32:
+                        player.setPk(false);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (player.getPlayType() == 2) {
+                switch (e.getKeyCode()) {
+                    // 玩家2小键盘移动
+                    case 38:
+                        if (player.getMove() == MoveEnum.top)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 40:
+                        if (player.getMove() == MoveEnum.down)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 37:
+                        if (player.getMove() == MoveEnum.left)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 39:
+                        if (player.getMove() == MoveEnum.right)
+                            player.setMove(MoveEnum.stop);
+                        break;
+                    case 47:
+                        player.setPk(false);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

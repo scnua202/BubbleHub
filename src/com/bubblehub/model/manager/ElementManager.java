@@ -55,23 +55,35 @@ public class ElementManager {
             String[] item = x.split(",");
             for (int j=0; j<Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Col")); j++) {
                 switch (item[j]) {
+                        // 墙
                     case "1":
-                        wall.add(ElementFactory.eFactory("Wall",i,j));
+                        SuperElement w = ElementFactory.eFactory("Wall",i,j);
+                        w.setIndex(Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("MyIndex")));
+                        wall.add(w);
                         break;
+                        // 箱子
                     case "2":
-                        wall.add(ElementFactory.eFactory("Wall",i,j));
+                        SuperElement b = ElementFactory.eFactory("Wall",i,j);
+                        b.setIndex(Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("MyIndex")));
+                        wall.add(b);
                         break;
+                        // 玩家
                     case "3":
                         SuperElement p = ElementFactory.eFactory("Player",i,j);
-                        p.setIndex(player.size()+1);
+                        p.setIndex(Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("MyIndex")));
                         player.add(p);
                         break;
                 }
+                // 绘制地图二维数组
                 if (!item[j].equals("3")) {
                     position[i][j] = Integer.parseInt(item[j]);
                 }
             }
         }
+
+        Player player1 = (Player)player.get(1);
+        player1.setPlayType(2);
+        player.set(1,player1);
 
         map.put("Player", player);
         map.put("Bomb", bomb);

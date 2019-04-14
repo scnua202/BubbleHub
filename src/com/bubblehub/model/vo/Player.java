@@ -253,6 +253,9 @@ public class Player extends SuperElement{
         if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 4) {
             this.hp--;
         }
+        if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 3) {
+            this.hp--;
+        }
 //        List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
 //        for (SuperElement x:list) {
 //            if (x.getCalcGrid().getRow() == this.getCalcGrid().getRow()) {
