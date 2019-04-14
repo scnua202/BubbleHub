@@ -2,6 +2,7 @@ package com.bubblehub.frame;
 
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.thread.GameThread;
+import com.bubblehub.thread.NetworkThread;
 
 import javax.swing.*;
 import java.awt.*;

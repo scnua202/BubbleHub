@@ -2,6 +2,7 @@ package com.bubblehub.model.manager;
 
 import com.bubblehub.model.factory.ElementFactory;
 import com.bubblehub.model.loader.ElementLoader;
+import com.bubblehub.model.vo.Player;
 import com.bubblehub.model.vo.SuperElement;
 import com.bubblehub.model.vo.Tool;
 
@@ -24,6 +25,9 @@ public class ElementManager {
     // 集合 NPC元素、场景元素......
     private Map<String, List<SuperElement>> map;
 
+    // 地图坐标，1是墙，2是箱子，3是炸弹，4是炸弹轨迹，5是道具类
+    private int[][] position;
+
     // 单例：需要一个全局唯一的引用
     private static ElementManager elementManager;
 
@@ -35,6 +39,7 @@ public class ElementManager {
     // 受保护的init函数
     protected void init() {
         this.map = new HashMap<>();
+        this.position=new int[12][16];
 
         /* 把List放进map中
          * hashCode()中，Object根据集合散列进行
@@ -57,8 +62,13 @@ public class ElementManager {
                         wall.add(ElementFactory.eFactory("Wall",i,j));
                         break;
                     case "3":
-                        player.add(ElementFactory.eFactory("Player",i,j));
+                        SuperElement p = ElementFactory.eFactory("Player",i,j);
+                        p.setIndex(player.size()+1);
+                        player.add(p);
                         break;
+                }
+                if (!item[j].equals("3")) {
+                    position[i][j] = Integer.parseInt(item[j]);
                 }
             }
         }
@@ -86,6 +96,14 @@ public class ElementManager {
     // Auto Generate
     public Map<String, List<SuperElement>> getMap() {
         return map;
+    }
+
+    public int[][] getPosition() {
+        return position;
+    }
+
+    public void setPosition(int[][] position) {
+        this.position = position;
     }
 
     // 为防止出现线程安全问题，对该方法加锁

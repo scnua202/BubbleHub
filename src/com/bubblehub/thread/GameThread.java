@@ -10,8 +10,12 @@ package com.bubblehub.thread;
 
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
+import com.bubblehub.model.vo.DataPackage;
 import com.bubblehub.model.vo.SuperElement;
+import com.bubblehub.thread.Client.*;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +35,20 @@ public class GameThread extends Thread {
     private int REFRESHRATE = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("SleepTime"));
 
     public int FPS = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("FPS"));
+
+    private NetworkThread networkThread;
+
+    private static GameThread gameThread;
+
+    static {
+        if (gameThread==null) {
+            gameThread = new GameThread();
+        }
+    }
+
+    public static GameThread getGameThread() {
+        return gameThread;
+    }
 
     @Override
     public void run() {
@@ -53,13 +71,15 @@ public class GameThread extends Thread {
     }
 
     private void loadElement() {
-
+        networkThread = new NetworkThread();
+        networkThread.start();
     }
 
     private void runGame() {
         // 游戏进行中的死循环
         while (true) {
             // 游戏中所有元素的更新
+
             Map<String, List<SuperElement>> map = ElementManager.getElementManager().getMap();
             Set<String> set = map.keySet();
             for (String key:set) {
@@ -75,7 +95,7 @@ public class GameThread extends Thread {
             }
 
             // 游戏流程控制
-            this.MapControl();
+//            this.MapControl();
 
             // player处于死亡状态时，结束游戏
 
@@ -89,12 +109,16 @@ public class GameThread extends Thread {
     }
 
     // 游戏流程控制
-    public void MapControl() {
-
+    public void MapControl(DataPackage dataPackage) {
+        List<SuperElement> list = ElementManager.getElementManager().getElementList("Player");
+        SuperElement superElement = list.get(1);
+        superElement.getCalcGrid().setRow(dataPackage.getRow()+1);
+        superElement.getCalcGrid().setCol(dataPackage.getCol()+1);
+        list.set(1,superElement);
     }
 
     // 游戏结束控制
     private void overGame() {
-
     }
+
 }

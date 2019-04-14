@@ -2,6 +2,7 @@ package com.bubblehub.model.vo;
 
 
 import com.bubblehub.model.loader.ElementLoader;
+import com.bubblehub.model.manager.ElementManager;
 import utils.CutImg;
 import utils.MoveEnum;
 
@@ -86,6 +87,13 @@ public class BombTrack extends SuperElement {
     @Override
     public void destroy() {
         if (keepTime < 0) {
+            calcGrid.parseGrid(getX(),getY());
+            int[][] gameMap = ElementManager.getElementManager().getPosition();
+            if (getCalcGrid().getRow()>=0 && getCalcGrid().getRow()<12) {
+                if (getCalcGrid().getCol()>=0 && getCalcGrid().getCol()<16) {
+                    gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] = 0;
+                }
+            }
             setVisible(false);
         }
     }
