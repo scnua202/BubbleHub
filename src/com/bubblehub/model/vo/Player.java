@@ -1,6 +1,8 @@
 package com.bubblehub.model.vo;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
 import utils.CutImg;
@@ -46,6 +48,8 @@ public class Player extends SuperElement{
     // 图片轮播的序号
     private int no = 0;
 
+    private int time1 = 0;
+
     public Player(int mapX, int mapY, String url) {
         super(mapX, mapY, "Player", url);
         setHp(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("PlayerLife")));
@@ -84,50 +88,46 @@ public class Player extends SuperElement{
         setX(calcGrid.getX());
         setY(calcGrid.getY());
 
-        if (!canIMove("Wall")) {
+        if (!canIMove()) {
             return;
         }
 
-        if (!canIMove("Bomb")) {
+        if (time1 >= getFPS()/2) {
+            time1 = 0;
+        } else {
+            time1++;
             return;
         }
 
-        if (time < getFPS()/4) {
-            return;
-        }
         // 上下边界判定
         // 上下移动
         switch (Move) {
             case top:
-                if (getMapRow()<0) {
+                if (calcGrid.getRow()<=0) {
                     break;
                 } else {
-                    setMapRow(getMapRow()-1);
-                    calcGrid.setRow(getMapRow()-1);
+                    calcGrid.setRow(calcGrid.getRow()-1);
                 }
                 return;
             case down:
-                if (getMapRow()>=11) {
+                if (calcGrid.getRow()>=11) {
                     break;
                 } else {
-                    setMapRow(getMapRow()+1);
-                    calcGrid.setRow(getMapRow()+1);
+                    calcGrid.setRow(calcGrid.getRow()+1);
                 }
                 return;
             case left:
-                if (getMapCol()<0) {
+                if (calcGrid.getCol()<=0) {
                     break;
                 } else {
-                    setMapCol(getMapCol()-1);
-                    calcGrid.setCol(getMapCol()-1);
+                    calcGrid.setCol(calcGrid.getCol()-1);
                 }
                 return;
             case right:
-                if (getMapCol()>=15) {
+                if (calcGrid.getCol()>=15) {
                     break;
                 } else {
-                    setMapCol(getMapCol()+1);
-                    calcGrid.setCol(getMapCol()+1);
+                    calcGrid.setCol(calcGrid.getCol()+1);
                 }
                 return;
             case stop:
@@ -173,44 +173,42 @@ public class Player extends SuperElement{
     }
 
     // 判断人物能否向目标方向移动
-    private boolean canIMove(String str) {
-        List<SuperElement> list = ElementManager.getElementManager().getElementList(str);
-//        list.addAll(ElementManager.getElementManager().getElementList("Bomb"));
+    private boolean canIMove() {
+        //初始化地图数组，有东西为1
+        List<SuperElement> list = ElementManager.getElementManager().getElementList("Bomb");
+        int[][] gameMap = ElementManager.getElementManager().getPosition();
         for (SuperElement x:list) {
-            if (x.getMapRow() == this.getMapRow()) {
-                switch (getMove()) {
-                    case left:
-                        if (x.getMapCol()+1==this.getMapCol()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    case right:
-                        if (x.getMapCol()-1==this.getMapCol()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                }
-            }
-            if (x.getMapCol() == this.getMapCol()) {
-                switch (getMove()) {
-                    case top:
-                        if (x.getMapRow()+1==this.getMapRow()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    case down:
-                        if (x.getMapRow()-1==this.getMapRow()) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                }
-            }
+            gameMap[x.getCalcGrid().getRow()][x.getCalcGrid().getCol()] = 3;
         }
-        return true;
+        //玩家的坐标
+        int playerX = this.calcGrid.getRow();
+        int playerY = this.calcGrid.getCol();
+        switch (Move){
+            case top:
+                if (playerX-1 >= 0) {
+                    if (gameMap[playerX-1][playerY]==0 || gameMap[playerX-1][playerY]>=4) return true;
+                    else return false;
+                }
+            case down:
+                if (playerX+1 <= 11) {
+                    if (gameMap[playerX+1][playerY]==0 || gameMap[playerX+1][playerY]>=4) return true;
+                    else return false;
+                }
+            case left:
+                if (playerY-1 >= 0) {
+                    if (gameMap[playerX][playerY-1]==0 || gameMap[playerX][playerY-1]>=4) return true;
+                    else return false;
+                }
+            case right:
+                if (playerY+1 <= 15) {
+                    if (gameMap[playerX][playerY+1]==0 || gameMap[playerX][playerY+1]>=4) return true;
+                    else return false;
+                }
+            case stop:
+                return false;
+            default:
+                return false;
+        }
     }
 
     // player开火方法
@@ -220,7 +218,9 @@ public class Player extends SuperElement{
             bombPlanted.add(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombExplodeTime")));
             setPk(false);
             List<SuperElement> list = ElementManager.getElementManager().getElementList("Bomb");
-            list.add(Bomb.createBomb(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("BombImgSrc1")));
+            list.add(Bomb.createBomb(getCalcGrid().getCol(),getCalcGrid().getRow(),ElementLoader.getElementLoader().getElementConfig("BombImgSrc1")));
+            int[][] gameMap = ElementManager.getElementManager().getPosition();
+            gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] = 3;
         }
     }
 
@@ -240,29 +240,50 @@ public class Player extends SuperElement{
 
     // 对于人物的碰撞事件
     public void gameControl() {
+        int[][] gameMap = ElementManager.getElementManager().getPosition();
+//        for (int i=0; i<12; i++) {
+//            for (int j=0; j<16; j++) {
+//                System.out.print(gameMap[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+//        System.out.println("x: " + getCalcGrid().getRow() + " y:" + getCalcGrid().getCol());
+//        System.out.println("------------------------------------");
         // 对于BombTrack的碰撞事件
-        List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
-        for (SuperElement x:list) {
-            if (x.getMapRow() == this.getMapRow()) {
-                if (x.getMapCol() == this.getMapCol()) {
-                    // 如果人物位置正好在bombTrack上，则生命值-1
-                    this.hp--;
-                }
-            }
+        if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 4) {
+            this.hp--;
         }
+//        List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
+//        for (SuperElement x:list) {
+//            if (x.getCalcGrid().getRow() == this.getCalcGrid().getRow()) {
+//                if (x.getCalcGrid().getCol() == this.getCalcGrid().getCol()) {
+//                    // 如果人物位置正好在bombTrack上，则生命值-1
+//                    this.hp--;
+//                }
+//            }
+//        }
 
         // 对于Tool的碰撞事件
         List<SuperElement> list1 = ElementManager.getElementManager().getElementList("Tool");
-        for (SuperElement x:list1) {
-            if (x.getMapRow() == this.getMapRow()) {
-                if (x.getMapCol() == this.getMapCol()) {
-                    // 如果人物位置正好在tool上，人物增加相应buff
+        if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 5) {
+            for (SuperElement x:list1) {
+                if (x.getCalcGrid().getRow()==getCalcGrid().getRow() && x.getCalcGrid().getCol()==getCalcGrid().getCol()) {
                     this.addBuff(x);
-                    // 道具消失
                     x.setVisible(false);
                 }
             }
         }
+
+//        for (SuperElement x:list1) {
+//            if (x.getCalcGrid().getRow() == this.getCalcGrid().getRow()) {
+//                if (x.getCalcGrid().getCol() == this.getCalcGrid().getCol()) {
+//                    // 如果人物位置正好在tool上，人物增加相应buff
+//                    this.addBuff(x);
+//                    // 道具消失
+//                    x.setVisible(false);
+//                }
+//            }
+//        }
     }
 
     // 人物拾取道具之后添加buff
@@ -311,6 +332,13 @@ public class Player extends SuperElement{
         if (getHp()<=0) {
             setVisible(false);
         }
+    }
+
+    @Override
+    public String toString() {
+        DataPackage dataPackage = new DataPackage(3, getIndex(), calcGrid.getRow(), calcGrid.getCol());
+        String s = JSON.toJSONString(dataPackage);
+        return s;
     }
 
     // Auto Generate

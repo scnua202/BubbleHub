@@ -41,7 +41,7 @@ public class Bomb extends SuperElement {
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombCutX")),
                     Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombCutY")));
         }
-        setPower(5);
+        setPower(2);
         setName("Bomb");
     }
 
@@ -80,26 +80,47 @@ public class Bomb extends SuperElement {
 
     @Override
     public void destroy() {
+        int[][] gameMap = ElementManager.getElementManager().getPosition();
         if (explodeTime<0) {
             MoveEnum[] direction = {MoveEnum.top, MoveEnum.down, MoveEnum.left, MoveEnum.right};
             boolean[] needShow = {true,true,true,true};
             List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
             // 炸弹中心爆炸效果
-            list.add(BombTrack.createBombTrack(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc2")));
+            list.add(BombTrack.createBombTrack(getCalcGrid().getCol(),getCalcGrid().getRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc2")));
             // 炸弹轨迹
-            for (int i=0; i<power; i++) {
+            for (int i=1; i<power; i++) {
+                Boolean isEnd = false;
                 for (int j=0; j<4; j++) {
-                    Boolean isEnd = false;
                     if (i == power-1) {
                         isEnd = true;
                     }
-                    if (!needShow[j]) {
-                        continue;
-                    } else {
+                    if (needShow[j]){
                         if (canIDisplay(i,direction[j])) {
-                            BombTrack track = BombTrack.createBombTrack(getMapCol(),getMapRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc1"));
+                            BombTrack track = BombTrack.createBombTrack(getCalcGrid().getCol(),getCalcGrid().getRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc1"));
                             track.setDirection(direction[j], isEnd, i);
                             list.add(track);
+                            switch (direction[j]) {
+                                case top:
+                                    if (getCalcGrid().getRow()-i>=0) {
+                                        gameMap[getCalcGrid().getRow()-i][getCalcGrid().getCol()] = 4;
+                                    }
+                                    break;
+                                case down:
+                                    if (getCalcGrid().getRow()+i<=11) {
+                                        gameMap[getCalcGrid().getRow()+i][getCalcGrid().getCol()] = 4;
+                                    }
+                                    break;
+                                case left:
+                                    if (getCalcGrid().getCol()-i>=0) {
+                                        gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()-i] = 4;
+                                    }
+                                    break;
+                                case right:
+                                    if (getCalcGrid().getCol()+i<=15) {
+                                        gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()+i] = 4;
+                                    }
+                                    break;
+                            }
                         } else {
                             needShow[j] = false;
                         }
@@ -109,59 +130,79 @@ public class Bomb extends SuperElement {
             }
             setVisible(false);
         }
+        gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()]=0;
     }
 
     // 判断轨迹是否需要显示（是否撞到墙了）
     private boolean canIDisplay(int i, MoveEnum direction) {
-        List<SuperElement> list = ElementManager.getElementManager().getElementList("Wall");
-        for (SuperElement x:list) {
-            if (x.getMapCol()==this.getMapCol()) {
-                switch (direction) {
-                    case top:
-                        if (x.getMapRow()+i==this.getMapRow()) {
-                            // 如果墙可以炸坏
-                            if (x.isThroughAble()) {
-                                x.setVisible(false);
-                            }
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    case down:
-                        if (x.getMapRow()-i==this.getMapRow()) {
-                            if (x.isThroughAble()) {
-                                x.setVisible(false);
-                            }
-                            return false;
-                        } else {
-                            return true;
-                        }
+        int[][] gameMap = ElementManager.getElementManager().getPosition();
+        int bombX = getCalcGrid().getRow();
+        int bombY = getCalcGrid().getCol();
+        switch (direction){
+            case top:
+                if (bombX-i >= 0) {
+                    if (gameMap[bombX-i][bombY] ==0) return true;
+                    else return false;
                 }
-            }
-            if (x.getMapRow()==this.getMapRow()) {
-                switch (direction) {
-                    case left:
-                        if (x.getMapCol()+i==this.getMapCol()) {
-                            if (x.isThroughAble()) {
-                                x.setVisible(false);
-                            }
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    case right:
-                        if (x.getMapCol()-i==this.getMapCol()) {
-                            if (x.isThroughAble()) {
-                                x.setVisible(false);
-                            }
-                            return false;
-                        } else {
-                            return true;
-                        }
+            case down:
+                if (bombX+i <= 11) {
+                    if (gameMap[bombX+i][bombY] ==0) return true;
+                    else return false;
                 }
-            }
+            case left:
+                if (bombY-i >= 0) {
+                    if (gameMap[bombX][bombY-i] ==0) return true;
+                    else return false;
+                }
+            case right:
+                if (bombY+i <= 15) {
+                    if (gameMap[bombX][bombY+i] ==0) return true;
+                    else return false;
+                }
+            default:
+                return false;
         }
-        return true;
+//        List<SuperElement> list = ElementManager.getElementManager().getElementList("Wall");
+//        for (SuperElement x:list) {
+//            if (x.getCalcGrid().getCol()==this.getCalcGrid().getCol()) {
+//                switch (direction) {
+//                    case top:
+//                        if (x.getCalcGrid().getRow()+i==this.getCalcGrid().getRow()) {
+//                            // 如果墙可以炸坏
+//                            if (x.isThroughAble()) {
+//                                x.setVisible(false);
+//                            }
+//                            return false;
+//                        }
+//                    case down:
+//                        if (x.getCalcGrid().getRow()-i==this.getCalcGrid().getRow()) {
+//                            if (x.isThroughAble()) {
+//                                x.setVisible(false);
+//                            }
+//                            return false;
+//                        }
+//                }
+//            }
+//            if (x.getCalcGrid().getRow()==this.getCalcGrid().getRow()) {
+//                switch (direction) {
+//                    case left:
+//                        if (x.getCalcGrid().getCol()+i==this.getCalcGrid().getCol()) {
+//                            if (x.isThroughAble()) {
+//                                x.setVisible(false);
+//                            }
+//                            return false;
+//                        }
+//                    case right:
+//                        if (x.getCalcGrid().getCol()-i==this.getCalcGrid().getCol()) {
+//                            if (x.isThroughAble()) {
+//                                x.setVisible(false);
+//                            }
+//                            return false;
+//                        }
+//                }
+//            }
+//        }
+//        return true;
     }
 
     @Override

@@ -18,6 +18,8 @@ import java.awt.*;
 
 public abstract class SuperElement {
 
+    private int index;
+
     // 元素类型名称
     private String name;
 
@@ -34,10 +36,6 @@ public abstract class SuperElement {
     private int y;
     private int w;
     private int h;
-
-    // 地图格子坐标
-    private int MapCol;
-    private int MapRow;
 
     // 地图格子坐标和像素点互转工具
     public CalcGrid calcGrid;
@@ -68,8 +66,6 @@ public abstract class SuperElement {
         this.calcGrid = new CalcGrid(MapRow ,MapCol);
         this.x = calcGrid.getX();
         this.y = calcGrid.getY();
-        this.MapCol = MapCol;
-        this.MapRow = MapRow;
         this.w = Integer.parseInt(ElementLoader.getElementLoader().getElementConfig(name+"Height"));
         this.h = Integer.parseInt(ElementLoader.getElementLoader().getElementConfig(name+"Width"));
         this.WIDTH = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Width"));
@@ -179,22 +175,6 @@ public abstract class SuperElement {
         MoveAble = moveAble;
     }
 
-    public int getMapCol() {
-        return MapCol;
-    }
-
-    public void setMapCol(int MapCol) {
-        this.MapCol = MapCol;
-    }
-
-    public int getMapRow() {
-        return MapRow;
-    }
-
-    public void setMapRow(int MapRow) {
-        this.MapRow = MapRow;
-    }
-
     public int getFPS() {
         return FPS;
     }
@@ -217,5 +197,13 @@ public abstract class SuperElement {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
