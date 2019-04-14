@@ -6,6 +6,8 @@ import com.bubblehub.frame.WelcomePanel;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.thread.GameListener;
 
+import javax.swing.*;
+
 /**
  * @Author Fisher
  * @Date 2019/4/10 20:21

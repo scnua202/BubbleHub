@@ -56,7 +56,9 @@ public class MainJPanel extends JPanel implements Runnable{
         super.paint(g);
 
         // 设置画板背景颜色
-        this.setBackground(Color.GRAY);
+//        this.setBackground(Color.GRAY);
+
+
         this.paintComponent(g);
         // 计算FPS
         cfpsMaker.makeFPS();

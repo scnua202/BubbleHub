@@ -56,6 +56,10 @@ public class MainFrame extends JFrame {
         this.addListener();
         // 添加画板，这里使用手动添加
 //        this.addJPanel();
+        // 背景图片
+        JLabel bgImg = new JLabel(new ImageIcon("resources/img/backgroundMap.png"));
+        bgImg.setBounds(0,0,800,600);
+        this.add(bgImg);
     }
 
     // 游戏启动
