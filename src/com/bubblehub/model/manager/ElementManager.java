@@ -49,6 +49,7 @@ public class ElementManager {
         List<SuperElement> bombTrack = new ArrayList<>();
         List<SuperElement> wall = new ArrayList<>();
         List<SuperElement> tool = new ArrayList<>();
+        List<SuperElement> box = new ArrayList<>();
 
         for (int i=0; i<Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("Row")); i++) {
             String x = ElementLoader.getElementLoader().getElementConfig("row"+i);
@@ -63,13 +64,13 @@ public class ElementManager {
                         break;
                         // 箱子
                     case "2":
-                        SuperElement b = ElementFactory.eFactory("Wall",i,j);
+                        SuperElement b = ElementFactory.eFactory("Box",i,j);
                         b.setIndex(Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("MyIndex")));
-                        wall.add(b);
+                        box.add(b);
                         break;
                         // 玩家
                     case "3":
-                        SuperElement p = ElementFactory.eFactory("Player",i,j);
+                        SuperElement p = ElementFactory.eFactory("Player"+player.size(),i,j);
                         p.setIndex(Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("MyIndex")));
                         player.add(p);
                         break;
@@ -81,15 +82,12 @@ public class ElementManager {
             }
         }
 
-        Player player1 = (Player)player.get(1);
-        player1.setPlayType(2);
-        player.set(1,player1);
-
         map.put("Player", player);
         map.put("Bomb", bomb);
         map.put("BombTrack", bombTrack);
         map.put("Wall", wall);
         map.put("Tool", tool);
+        map.put("Box", box);
 
     }
 

@@ -60,7 +60,7 @@ public class MainFrame extends JFrame {
     }
     //播放游戏bgm
     public void playGameBgm() {
-        myMusicPlay audioPlayWave = new myMusicPlay("resources/gameBgm.wav");// 开音乐
+        myMusicPlay audioPlayWave = new myMusicPlay("resources/music/gameBgm.wav");// 开音乐
         audioPlayWave.start();
     }
 

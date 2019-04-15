@@ -3,6 +3,7 @@ package com.bubblehub.model.vo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bubblehub.model.factory.ElementFactory;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
 import utils.CutImg;
@@ -92,7 +93,7 @@ public class Player extends SuperElement{
             return;
         }
 
-        if (time1 >= getFPS()/2) {
+        if (time1 >= getFPS()/4) {
             time1 = 0;
         } else {
             time1++;
@@ -218,7 +219,9 @@ public class Player extends SuperElement{
             bombPlanted.add(Integer.parseInt(ElementLoader.getElementLoader().getElementConfig("BombExplodeTime")));
             setPk(false);
             List<SuperElement> list = ElementManager.getElementManager().getElementList("Bomb");
-            list.add(Bomb.createBomb(getCalcGrid().getCol(),getCalcGrid().getRow(),ElementLoader.getElementLoader().getElementConfig("BombImgSrc1")));
+            SuperElement bomb = ElementFactory.eFactory("Bomb",getCalcGrid().getRow(),getCalcGrid().getCol());
+            ((Bomb) bomb).setPower(getPower());
+            list.add(bomb);
             int[][] gameMap = ElementManager.getElementManager().getPosition();
             gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] = 3;
         }
@@ -251,11 +254,12 @@ public class Player extends SuperElement{
 //        System.out.println("------------------------------------");
         // 对于BombTrack的碰撞事件
         if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 4) {
+            System.out.println("hp--");
             this.hp--;
         }
-        if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 3) {
-            this.hp--;
-        }
+//        if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 3) {
+//            this.hp--;
+//        }
 //        List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
 //        for (SuperElement x:list) {
 //            if (x.getCalcGrid().getRow() == this.getCalcGrid().getRow()) {
@@ -272,6 +276,7 @@ public class Player extends SuperElement{
             for (SuperElement x:list1) {
                 if (x.getCalcGrid().getRow()==getCalcGrid().getRow() && x.getCalcGrid().getCol()==getCalcGrid().getCol()) {
                     this.addBuff(x);
+                    x.destroy();
                     x.setVisible(false);
                 }
             }
@@ -294,12 +299,15 @@ public class Player extends SuperElement{
         if (s instanceof Tool) {
             switch(((Tool) s).getToolType()) {
                 case life:
+                    System.out.println("life++");
                     this.hp++;
                     break;
                 case attack:
+                    System.out.println("power++");
                     this.power++;
                     break;
                 case dontMove:
+                    System.out.println("dontmove");
                     this.setMoveAble(false);
                     break;
                 default:

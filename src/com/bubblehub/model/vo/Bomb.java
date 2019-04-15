@@ -141,22 +141,38 @@ public class Bomb extends SuperElement {
         switch (direction){
             case top:
                 if (bombX-i >= 0) {
-                    if (gameMap[bombX-i][bombY] ==0) return true;
+                    if (gameMap[bombX-i][bombY]==0) return true;
+                    else if (gameMap[bombX-i][bombY]==2) {
+                        gameMap[bombX-i][bombY]=0;
+                        return false;
+                    }
                     else return false;
                 }
             case down:
                 if (bombX+i <= 11) {
-                    if (gameMap[bombX+i][bombY] ==0) return true;
+                    if (gameMap[bombX+i][bombY]==0) return true;
+                    else if (gameMap[bombX+i][bombY]==2) {
+                        gameMap[bombX+i][bombY]=0;
+                        return false;
+                    }
                     else return false;
                 }
             case left:
                 if (bombY-i >= 0) {
-                    if (gameMap[bombX][bombY-i] ==0) return true;
+                    if (gameMap[bombX][bombY-i]==0) return true;
+                    else if (gameMap[bombX][bombY-i]==2) {
+                        gameMap[bombX][bombY-i]=0;
+                        return false;
+                    }
                     else return false;
                 }
             case right:
                 if (bombY+i <= 15) {
-                    if (gameMap[bombX][bombY+i] ==0) return true;
+                    if (gameMap[bombX][bombY+i]==0) return true;
+                    else if (gameMap[bombX][bombY+i]==2) {
+                        gameMap[bombX][bombY+i]=0;
+                        return false;
+                    }
                     else return false;
                 }
             default:

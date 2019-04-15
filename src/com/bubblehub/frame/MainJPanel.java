@@ -62,7 +62,7 @@ public class MainJPanel extends JPanel implements Runnable{
         ImageIcon bgImg = new ImageIcon("resources/img/backgroundMap2.png");
         JLabel bgLabel = new JLabel();
         bgLabel.setIcon(bgImg);
-        bgLabel.setBounds(0,0,820,625);
+        bgLabel.setBounds(0,0,800,600);
         this.add(bgLabel);
 
 

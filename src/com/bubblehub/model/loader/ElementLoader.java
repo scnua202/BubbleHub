@@ -86,6 +86,7 @@ public class ElementLoader {
                 e.printStackTrace();
             }
         }
+        System.out.println();
     }
 
     public static void main(String args[]) {

@@ -1,8 +1,10 @@
 package com.bubblehub.model.vo;
 
 import com.bubblehub.model.loader.ElementLoader;
+import com.bubblehub.model.manager.ElementManager;
 import com.bubblehub.model.vo.SuperElement;
 import utils.CutImg;
+import utils.MoveEnum;
 import utils.ToolType;
 
 import java.awt.*;
@@ -20,6 +22,10 @@ public class Tool extends SuperElement {
     private ToolType toolType;
 
     private boolean picked;
+
+    private int time = 0;
+
+    private int no =0;
 
     public Tool() {
         super();
@@ -54,12 +60,21 @@ public class Tool extends SuperElement {
 
     @Override
     public void move() {
+        if (time >= getFPS()/4) {
+            time = 0;
+            no = (no+1)%cutImg.getMaxY();
+            this.cutImg.setNoY(no);
+        } else {
+            time++;
+        }
 
     }
 
     @Override
     public void destroy() {
         if (isPicked()) {
+            int[][] gameMap = ElementManager.getElementManager().getPosition();
+            gameMap[calcGrid.getRow()][calcGrid.getCol()] = 0;
             setVisible(false);
         }
     }
