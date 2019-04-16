@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
 import com.bubblehub.model.vo.DataPackage;
-import com.bubblehub.model.vo.Player;
 import com.bubblehub.model.vo.SuperElement;
 import com.bubblehub.thread.Client.MsgProvider;
-import com.bubblehub.thread.Client.ReceiveThread;
 import com.bubblehub.thread.Client.RefreshPlayer;
 import com.bubblehub.thread.Client.SendThread;
 
@@ -16,11 +14,11 @@ import java.util.List;
 
 /**
  * @Author Fisher
- * @Date 2019/4/14 14:51
+ * @Date 2019/4/16 22:42
  **/
 
 
-public class NetworkThread extends Thread implements MsgProvider, RefreshPlayer {
+public class BombNetworkThread extends Thread implements MsgProvider, RefreshPlayer {
 
     private SendThread sendThread;
 
@@ -28,7 +26,7 @@ public class NetworkThread extends Thread implements MsgProvider, RefreshPlayer 
 
     private int serverPort = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("ServerPort"));
 
-    public NetworkThread() {
+    public BombNetworkThread() {
         try {
             sendThread = new SendThread(serverIp,serverPort,this,this);
             sendThread.start();
@@ -39,19 +37,28 @@ public class NetworkThread extends Thread implements MsgProvider, RefreshPlayer 
 
     @Override
     public String getDataFromObject() {
-        List<SuperElement> playerlist = ElementManager.getElementManager().getElementList("Player");
-        // 将自己的数据发送
-        return playerlist.get(0).toString();
+        List<SuperElement> bombList = ElementManager.getElementManager().getElementList("Bomb");
+        if (bombList.size()>0) {
+            List<String> list = new ArrayList<>();
+            for (SuperElement x:bombList) {
+                list.add(x.toString());
+            }
+            return JSONObject.toJSONString(list);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void refreshPlayer(String strReceive) {
         try {
-            DataPackage dataPackage = JSONObject.parseObject(strReceive, DataPackage.class);
-            GameThread.getGameThread().MapControl(dataPackage);
+            List<String> list = JSONObject.parseObject(strReceive, List.class);
+            for (String x:list) {
+                GameThread.getGameThread().MapControl(JSONObject.parseObject(x, DataPackage.class));
+            }
+//            DataPackage dataPackage = JSONObject.parseObject(strReceive, DataPackage.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

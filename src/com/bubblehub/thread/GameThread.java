@@ -8,14 +8,13 @@ package com.bubblehub.thread;
  * package thread
  **/
 
+import com.bubblehub.model.factory.ElementFactory;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
+import com.bubblehub.model.vo.Bomb;
 import com.bubblehub.model.vo.DataPackage;
 import com.bubblehub.model.vo.SuperElement;
-import com.bubblehub.thread.Client.*;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +35,9 @@ public class GameThread extends Thread {
 
     public int FPS = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("FPS"));
 
-    private NetworkThread networkThread;
+    private PlayerNetworkThread playerNetworkThread;
+
+    private BombNetworkThread bombNetworkThread;
 
     private static GameThread gameThread;
 
@@ -73,8 +74,10 @@ public class GameThread extends Thread {
     private void loadElement() {
         // 如果启动了联机对战，则新建网络线程
         if (Boolean.parseBoolean(ElementLoader.getElementLoader().getGlobalConfig("Online"))) {
-            networkThread = new NetworkThread();
-            networkThread.start();
+            playerNetworkThread = new PlayerNetworkThread();
+            playerNetworkThread.start();
+//            bombNetworkThread = new BombNetworkThread();
+//            bombNetworkThread.start();
         }
     }
 
@@ -101,6 +104,9 @@ public class GameThread extends Thread {
 //            this.MapControl();
 
             // player处于死亡状态时，结束游戏
+            if (this.overGame()) {
+                break;
+            }
 
             try {
                 sleep(REFRESHRATE);
@@ -113,9 +119,23 @@ public class GameThread extends Thread {
 
     // 游戏流程控制
     public void MapControl(DataPackage dataPackage) {
+        int[][] gameMap = ElementManager.getElementManager().getPosition();
         switch (dataPackage.getType()) {
             // 墙体
             case 1:
+                break;
+            // 炸弹
+            case 2:
+                if (dataPackage.getIndex()==Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("PlayerIndex"))) {
+                    // 如果有炸弹
+                    if (gameMap[dataPackage.getRow()][dataPackage.getCol()] == 3) {
+                        break;
+                    } else {
+                        // 如果没有，则添加炸弹
+                        List<SuperElement> bombList = ElementManager.getElementManager().getElementList("Bomb");
+                        bombList.add(ElementFactory.eFactory("Bomb",dataPackage.getCol(),dataPackage.getRow()));
+                    }
+                }
                 break;
             // 玩家
             case 3:
@@ -131,7 +151,14 @@ public class GameThread extends Thread {
     }
 
     // 游戏结束控制
-    private void overGame() {
+    private boolean overGame() {
+        List<SuperElement> playerList = ElementManager.getElementManager().getElementList("Player");
+        if (playerList.size() < 2) {
+            System.out.println("游戏结束了");
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

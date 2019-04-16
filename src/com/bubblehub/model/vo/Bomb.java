@@ -1,5 +1,6 @@
 package com.bubblehub.model.vo;
 
+import com.alibaba.fastjson.JSON;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
 import utils.CutImg;
@@ -225,6 +226,12 @@ public class Bomb extends SuperElement {
     public void update() {
         super.update();
         this.destroy();
+    }
+
+    @Override
+    public String toString() {
+        DataPackage dataPackage = new DataPackage(2, getIndex(), calcGrid.getRow(), calcGrid.getCol());
+        return JSON.toJSONString(dataPackage);
     }
 
     public int getExplodeTime() {

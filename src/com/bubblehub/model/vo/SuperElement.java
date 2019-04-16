@@ -19,7 +19,7 @@ import java.awt.*;
 
 public abstract class SuperElement {
 
-    private int index;
+    private int index = Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("MyIndex"));
 
     // 元素类型名称
     private String name;

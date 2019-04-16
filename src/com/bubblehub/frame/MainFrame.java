@@ -58,6 +58,7 @@ public class MainFrame extends JFrame {
         // 添加画板，这里使用手动添加
 //        this.addJPanel();
     }
+
     //播放游戏bgm
     public void playGameBgm() {
         myMusicPlay audioPlayWave = new myMusicPlay("resources/music/gameBgm.wav");// 开音乐
