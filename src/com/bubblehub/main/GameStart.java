@@ -5,7 +5,7 @@ import com.bubblehub.frame.MainJPanel;
 import com.bubblehub.frame.WelcomePanel;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.thread.GameListener;
-import sun.applet.Main;
+//import sun.applet.Main;
 
 /**
  * @Author Fisher
@@ -41,7 +41,7 @@ public class GameStart {
             // 游戏启动
 //            mainFrame.start();
             mainFrame.runStart();
-            mainFrame.playGameBgm();
+//            mainFrame.playGameBgm();
 
         } catch (RuntimeException e) {
             e.printStackTrace();

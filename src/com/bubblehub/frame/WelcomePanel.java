@@ -19,12 +19,21 @@ public class WelcomePanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        this.setLayout(null);
 //        String url = "resources/img/Titles.png";
 //        ImageIcon img = new ImageIcon(url);
 //        g.drawImage(img.getImage(),0,0,this.getWidth(),this.getHeight(),this);
 
+        // 添加背景图片
+        ImageIcon bgImg = new ImageIcon("resources/img/Titles2.png");
+        JLabel bgLabel = new JLabel();
+        bgLabel.setIcon(bgImg);
+        bgLabel.setBounds(0, 0, 800, 600);
+
+
         JButton startButton = new JButton();
         startButton.setText("开始游戏");
+        startButton.setBounds(250, 200, 300, 100);
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -38,16 +47,12 @@ public class WelcomePanel extends JPanel {
             }
         });
         startButton.setFocusable(false);
-        BorderLayout layout = new BorderLayout();
-        this.setLayout(layout);
-        this.add(startButton,BorderLayout.CENTER);
-
-    }
-
-    //背景图片
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        this.add(startButton);
+        this.add(bgLabel);
+        this.updateUI();
+//        BorderLayout layout = new BorderLayout();
+//        this.setLayout(layout);
+//        this.add(startButton,BorderLayout.CENTER);
 
     }
 }

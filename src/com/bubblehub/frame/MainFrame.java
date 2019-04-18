@@ -36,6 +36,7 @@ public class MainFrame extends JFrame {
     private MouseMotionListener mouseMotionListener;
     // 画板
     private JPanel jPanel;
+    private GameOverPanel gameOverPanel;
 
     // 窗体构造方法，为了提高可复用程度，使用init函数
     public MainFrame() throws HeadlessException {
@@ -85,9 +86,15 @@ public class MainFrame extends JFrame {
 
     // 游戏结束
     public void endGame() {
+//        this.getContentPane().removeAll();
+//        JOptionPane.showMessageDialog(null, "游戏结束了。╮(╯▽╰)╭");
+//        this.setVisible(false);
+        GameOverPanel gameOverPanel = new GameOverPanel();
         this.getContentPane().removeAll();
-        JOptionPane.showMessageDialog(null, "游戏结束了。╮(╯▽╰)╭");
-        this.setVisible(false);
+        this.repaint();
+        this.setjPanel(gameOverPanel);
+        this.addJPanel();
+        gameOverPanel.updateUI();
     }
 
     // 添加画板
