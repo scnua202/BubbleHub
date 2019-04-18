@@ -8,6 +8,8 @@ package com.bubblehub.thread;
  * package thread
  **/
 
+import com.bubblehub.frame.MainFrame;
+import com.bubblehub.main.GameStart;
 import com.bubblehub.model.factory.ElementFactory;
 import com.bubblehub.model.loader.ElementLoader;
 import com.bubblehub.model.manager.ElementManager;
@@ -105,7 +107,8 @@ public class GameThread extends Thread {
 
             // player处于死亡状态时，结束游戏
             if (this.overGame()) {
-                break;
+                GameStart.getMainFrame().endGame();
+                this.stop();
             }
 
             try {

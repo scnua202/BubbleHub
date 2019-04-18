@@ -48,6 +48,8 @@ public class Player extends SuperElement{
     private int time = 0;
     // 图片轮播的序号
     private int no = 0;
+    // 被炸弹炸了之后的无敌时间
+    private int freezeTime = 0;
 
     private int time1 = 0;
 
@@ -253,10 +255,16 @@ public class Player extends SuperElement{
 //        System.out.println("x: " + getCalcGrid().getRow() + " y:" + getCalcGrid().getCol());
 //        System.out.println("------------------------------------");
         // 对于BombTrack的碰撞事件
-        if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 4) {
-            System.out.println("hp--");
-            this.hp--;
+        if (freezeTime <= 0) {
+            if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 4) {
+                System.out.println("hp--");
+                this.hp--;
+                this.freezeTime = 100;
+            }
+        } else if (freezeTime > -50){
+            freezeTime--;
         }
+
 //        if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 3) {
 //            this.hp--;
 //        }

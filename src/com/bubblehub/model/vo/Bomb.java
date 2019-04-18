@@ -88,6 +88,7 @@ public class Bomb extends SuperElement {
             List<SuperElement> list = ElementManager.getElementManager().getElementList("BombTrack");
             // 炸弹中心爆炸效果
             list.add(BombTrack.createBombTrack(getCalcGrid().getCol(),getCalcGrid().getRow(),ElementLoader.getElementLoader().getElementConfig("TrackImgSrc2")));
+            gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] = 4;
             // 炸弹轨迹
             for (int i=1; i<power; i++) {
                 Boolean isEnd = false;

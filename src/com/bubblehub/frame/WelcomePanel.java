@@ -1,5 +1,7 @@
 package com.bubblehub.frame;
 
+import com.bubblehub.main.GameStart;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,12 +29,15 @@ public class WelcomePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //点击按钮后跳转到 -->游戏mainPanel
-                MainJPanel mainJPanel = new MainJPanel();
                 setVisible(false);
-                mainFrame.add(mainJPanel);
-                mainFrame.setVisible(true);
+                MainJPanel mainJPanel = new MainJPanel();
+                GameStart.getMainFrame().getContentPane().removeAll();
+                GameStart.getMainFrame().setjPanel(mainJPanel);
+                GameStart.getMainFrame().addJPanel();
+                GameStart.getMainFrame().start();
             }
         });
+        startButton.setFocusable(false);
         BorderLayout layout = new BorderLayout();
         this.setLayout(layout);
         this.add(startButton,BorderLayout.CENTER);

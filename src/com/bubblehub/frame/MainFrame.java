@@ -65,6 +65,11 @@ public class MainFrame extends JFrame {
         audioPlayWave.start();
     }
 
+    // 游戏开始界面
+    public void runStart() {
+        this.setVisible(true);
+    }
+
     // 游戏启动
     public void start() {
         GameThread gameThread = new GameThread();
@@ -76,6 +81,13 @@ public class MainFrame extends JFrame {
             new Thread((Runnable)jPanel).start();
         }
         this.setVisible(true);
+    }
+
+    // 游戏结束
+    public void endGame() {
+        this.getContentPane().removeAll();
+        JOptionPane.showMessageDialog(null, "游戏结束了。╮(╯▽╰)╭");
+        this.setVisible(false);
     }
 
     // 添加画板
@@ -119,4 +131,6 @@ public class MainFrame extends JFrame {
     public void setjPanel(JPanel jPanel) {
         this.jPanel = jPanel;
     }
+
+
 }
