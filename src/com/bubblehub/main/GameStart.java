@@ -41,7 +41,7 @@ public class GameStart {
             // 游戏启动
 //            mainFrame.start();
             mainFrame.runStart();
-//            mainFrame.playGameBgm();
+            mainFrame.playGameBgm();
 
         } catch (RuntimeException e) {
             e.printStackTrace();
