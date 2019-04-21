@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="src" path="/BubbleHub/src"/>
+	<classpathentry exported="true" kind="src" path="/BubbleHub/resources"/>
+	<classpathentry exported="true" kind="lib" path="resources/fastjson-1.2.57.jar"/>
+	<classpathentry kind="output" path="out/production/BubbleHub"/>
+</classpath>

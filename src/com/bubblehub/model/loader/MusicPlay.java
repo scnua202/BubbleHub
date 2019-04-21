@@ -6,12 +6,12 @@ import java.io.IOException;
 
 
 //播放音乐类
-public class myMusicPlay extends Thread {
+public class MusicPlay extends Thread {
 
 	private String fileName;
 	private final int EXTERNAL_BUFFER_SIZE = 524288;
 
-	public myMusicPlay(String wavFile) {
+	public MusicPlay(String wavFile) {
 		this.fileName = wavFile;
 		}
 	public void run() {

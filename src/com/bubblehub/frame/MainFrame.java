@@ -1,7 +1,7 @@
 package com.bubblehub.frame;
 
 import com.bubblehub.model.loader.ElementLoader;
-import com.bubblehub.model.loader.myMusicPlay;
+import com.bubblehub.model.loader.MusicPlay;
 import com.bubblehub.thread.GameThread;
 
 import javax.swing.*;
@@ -62,7 +62,7 @@ public class MainFrame extends JFrame {
 
     //播放游戏bgm
     public void playGameBgm() {
-        myMusicPlay audioPlayWave = new myMusicPlay("resources/music/gameBgm.wav");// 开音乐
+        MusicPlay audioPlayWave = new MusicPlay("resources/music/gameBgm.wav");// 开音乐
         audioPlayWave.start();
     }
 

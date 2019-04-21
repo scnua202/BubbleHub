@@ -283,6 +283,7 @@ public class Player extends SuperElement{
         if (gameMap[getCalcGrid().getRow()][getCalcGrid().getCol()] == 5) {
             for (SuperElement x:list1) {
                 if (x.getCalcGrid().getRow()==getCalcGrid().getRow() && x.getCalcGrid().getCol()==getCalcGrid().getCol()) {
+                    gameMap[x.getCalcGrid().getRow()][x.getCalcGrid().getCol()] = 0;
                     this.addBuff(x);
                     x.destroy();
                     x.setVisible(false);

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: fastjson-1.2.57.jar
+Main-Class: com.bubblehub.main.GameStart
+

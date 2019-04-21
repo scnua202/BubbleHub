@@ -145,8 +145,8 @@ public class GameThread extends Thread {
                 if (dataPackage.getIndex()==Integer.parseInt(ElementLoader.getElementLoader().getGlobalConfig("PlayerIndex"))) {
                     List<SuperElement> list = ElementManager.getElementManager().getElementList("Player");
                     SuperElement superElement = list.get(1);
-                    superElement.getCalcGrid().setRow(dataPackage.getRow());
-                    superElement.getCalcGrid().setCol(dataPackage.getCol());
+                    superElement.getCalcGrid().setRow(dataPackage.getRow()+6);
+                    superElement.getCalcGrid().setCol(dataPackage.getCol()+10);
                     list.set(1,superElement);
                 }
                 break;
